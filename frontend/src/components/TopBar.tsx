@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Compass, Activity, Sparkles } from 'lucide-react';
+import { Search, Compass } from 'lucide-react';
 import { SystemHealth } from '../types';
 
 interface TopBarProps {
@@ -27,8 +27,8 @@ export const TopBar: React.FC<TopBarProps> = ({
           onClick={onOpenCommandPalette}
           title="Global Search & Navigation (Ctrl+K)"
         >
-          <Search size={16} color="var(--emerald-400)" />
-          <span>Search capabilities or command...</span>
+          <Search size={16} color="#10B981" />
+          <span>Search capabilities, foods, or recipes...</span>
           <kbd className="kbd-shortcut">Ctrl+K</kbd>
         </button>
       </div>
@@ -38,36 +38,38 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '0.5rem',
-          padding: '0.4rem 0.85rem',
+          gap: '0.55rem',
+          padding: '0.45rem 1rem',
           borderRadius: 'var(--radius-full)',
-          background: 'rgba(6, 20, 12, 0.75)',
-          border: '1px solid var(--border-subtle)',
-          fontSize: '0.75rem',
-          fontFamily: 'var(--font-mono)'
+          background: isHealthy ? '#D9FBE8' : '#FEF3C7',
+          border: `1.5px solid ${isHealthy ? '#A7F3D0' : '#FDE68A'}`,
+          fontSize: '0.78rem',
+          fontFamily: 'var(--font-mono)',
+          fontWeight: 700,
+          boxShadow: '0 2px 6px rgba(100, 116, 139, 0.06)'
         }}>
           <span style={{
-            width: '8px',
-            height: '8px',
+            width: '9px',
+            height: '9px',
             borderRadius: '50%',
-            backgroundColor: isHealthy ? 'var(--emerald-400)' : 'var(--amber-400)',
-            boxShadow: isHealthy ? '0 0 10px var(--emerald-400)' : 'none',
+            backgroundColor: isHealthy ? '#10B981' : '#F59E0B',
+            boxShadow: isHealthy ? '0 0 8px #10B981' : 'none',
             display: 'inline-block'
           }} />
-          <span style={{ color: 'var(--text-secondary)' }}>
+          <span style={{ color: isHealthy ? '#065F46' : '#92400E' }}>
             {isHealthy ? 'AI ENGINE ONLINE' : 'CONNECTING...'}
           </span>
-          <span style={{ color: 'var(--text-dim)' }}>|</span>
-          <span style={{ color: 'var(--emerald-400)' }}>v{systemHealth?.version || '1.0.0'}</span>
+          <span style={{ color: isHealthy ? '#6EE7B7' : '#FCD34D' }}>•</span>
+          <span style={{ color: isHealthy ? '#047857' : '#B45309' }}>v{systemHealth?.version || '1.0.0'}</span>
         </div>
 
         {/* View Landing Mode */}
         <button
           onClick={onNavigateLanding}
           className="btn-secondary"
-          style={{ padding: '0.45rem 0.9rem', fontSize: '0.82rem' }}
+          style={{ padding: '0.5rem 1.1rem', fontSize: '0.85rem' }}
         >
-          <Compass size={15} color="var(--emerald-400)" />
+          <Compass size={16} color="#0D9488" />
           <span>Landing Tour</span>
         </button>
 
@@ -76,18 +78,28 @@ export const TopBar: React.FC<TopBarProps> = ({
           onClick={onOpenProfile}
           style={{
             cursor: 'pointer',
-            padding: '0.4rem 0.85rem',
+            padding: '0.45rem 1.1rem',
             borderRadius: 'var(--radius-full)',
-            background: 'var(--surface-glass-card)',
-            border: '1px solid var(--border-subtle)',
+            background: '#FFFFFF',
+            border: '1.5px solid #E2E8F0',
+            boxShadow: 'var(--clay-shadow-sm)',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem',
-            fontSize: '0.82rem',
-            fontWeight: 600
+            gap: '0.6rem',
+            fontSize: '0.85rem',
+            fontWeight: 700,
+            color: '#1E293B',
+            transition: 'all 200ms ease'
           }}
+          title="Switch User Profile"
         >
-          <span style={{ color: 'var(--text-primary)' }}>{activeProfileName}</span>
+          <span style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            backgroundColor: '#10B981'
+          }} />
+          <span>{activeProfileName}</span>
         </div>
       </div>
     </header>

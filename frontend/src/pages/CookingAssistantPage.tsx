@@ -161,15 +161,19 @@ export const CookingAssistantPage: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       {/* Header */}
-      <div className="glass-panel" style={{ padding: '2rem 2.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
-          <div style={{ padding: '8px', borderRadius: '8px', background: 'rgba(163, 230, 53, 0.2)', color: 'var(--lime-400)' }}>
-            <ChefHat size={22} />
+      <div className="card-clay-peach" style={{ padding: '2rem 2.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          <div className="clay-icon-container" style={{ background: 'linear-gradient(135deg, #EA580C, #C2410C)', color: '#FFFFFF', boxShadow: '0 8px 18px rgba(234, 88, 12, 0.35)' }}>
+            <ChefHat size={26} />
           </div>
-          <div>
-            <h1 style={{ fontSize: '1.85rem' }}>Smart Cooking Assistant & Recipe Builder</h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-              Conversational culinary intelligence with pantry recipe synthesis, hands-free voice timers, and ingredient substitutions.
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.25rem' }}>
+              <span className="badge badge-coral" style={{ fontWeight: 700 }}>AI Culinary Intelligence</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Hands-Free Kitchen Companion</span>
+            </div>
+            <h1 style={{ fontSize: '1.9rem', color: 'var(--text-primary)', margin: '0 0 0.35rem 0' }}>Smart Cooking Assistant & Recipe Builder</h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', margin: 0, maxWidth: '780px' }}>
+              Conversational culinary intelligence with pantry recipe synthesis, hands-free voice timers, and dynamic ingredient substitutions.
             </p>
           </div>
         </div>
@@ -177,12 +181,12 @@ export const CookingAssistantPage: React.FC = () => {
 
       <div className="grid-2">
         {/* Left Column: Interactive Chat Console */}
-        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '640px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border-subtle)', marginBottom: '1rem' }}>
-            <h3 style={{ fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div className="card-clay" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '640px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '0.75rem', borderBottom: '1.5px solid #F1F5F9', marginBottom: '1rem' }}>
+            <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span>Culinary Dialogue</span>
             </h3>
-            <span className="badge badge-emerald">Hands-Free Enabled</span>
+            <span className="badge badge-coral" style={{ fontWeight: 700, fontSize: '0.75rem' }}>Hands-Free Enabled</span>
           </div>
 
           {/* Messages Scroll Area */}
@@ -193,26 +197,27 @@ export const CookingAssistantPage: React.FC = () => {
                 style={{
                   alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
                   maxWidth: '85%',
-                  background: m.role === 'user' ? 'rgba(16, 185, 129, 0.2)' : 'var(--surface-glass-card)',
-                  border: `1px solid ${m.role === 'user' ? 'rgba(52, 211, 153, 0.4)' : 'var(--border-subtle)'}`,
-                  borderRadius: 'var(--radius-md)',
-                  padding: '0.85rem 1rem'
+                  background: m.role === 'user' ? '#FFF2EA' : '#FFFFFF',
+                  border: `1.5px solid ${m.role === 'user' ? '#FDBA74' : '#E2E8F0'}`,
+                  borderRadius: 'var(--radius-lg)',
+                  padding: '0.95rem 1.15rem',
+                  boxShadow: 'var(--clay-shadow-card)'
                 }}
               >
-                <div style={{ fontSize: '0.72rem', color: m.role === 'user' ? 'var(--emerald-400)' : 'var(--lime-400)', fontWeight: 600, marginBottom: '0.25rem', textTransform: 'uppercase' }}>
+                <div style={{ fontSize: '0.75rem', color: m.role === 'user' ? '#C2410C' : '#EA580C', fontWeight: 700, marginBottom: '0.25rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   {m.role === 'user' ? 'You' : 'Chef Assistant'}
                 </div>
-                <div style={{ fontSize: '0.88rem', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+                <div style={{ fontSize: '0.9rem', color: 'var(--text-primary)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
                   {m.content}
                 </div>
 
                 {m.recipe && (
                   <button
                     onClick={() => setActiveRecipe(m.recipe!)}
-                    className="btn-secondary"
-                    style={{ marginTop: '0.75rem', padding: '0.4rem 0.8rem', fontSize: '0.78rem' }}
+                    className="btn-clay-secondary"
+                    style={{ marginTop: '0.75rem', padding: '0.45rem 0.85rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
                   >
-                    <ChefHat size={14} color="var(--lime-400)" />
+                    <ChefHat size={15} color="#EA580C" />
                     <span>View Recipe: {m.recipe.title}</span>
                   </button>
                 )}
@@ -222,19 +227,21 @@ export const CookingAssistantPage: React.FC = () => {
           </div>
 
           {/* Chat Input & Voice Controls */}
-          <div style={{ paddingTop: '1rem', borderTop: '1px solid var(--border-subtle)', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <div style={{ paddingTop: '1rem', borderTop: '1.5px solid #F1F5F9', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
             <button
               onClick={toggleListening}
               style={{
-                background: isListening ? 'rgba(251, 113, 133, 0.25)' : 'rgba(255, 255, 255, 0.08)',
-                border: `1px solid ${isListening ? 'var(--rose-400)' : 'var(--border-subtle)'}`,
-                color: isListening ? 'var(--rose-400)' : 'var(--text-muted)',
+                background: isListening ? '#FFE4E6' : '#F8FAFC',
+                border: `1.5px solid ${isListening ? '#FDA4AF' : '#E2E8F0'}`,
+                color: isListening ? '#E11D48' : '#64748B',
                 borderRadius: 'var(--radius-md)',
                 padding: '0.75rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                boxShadow: 'var(--clay-shadow-card)',
+                transition: 'all 0.2s ease'
               }}
               title={isListening ? "Listening... click to stop" : "Speak your message (Voice dictation)"}
             >
@@ -248,10 +255,11 @@ export const CookingAssistantPage: React.FC = () => {
               value={inputMessage}
               onChange={e => setInputMessage(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSendMessage()}
+              style={{ flex: 1 }}
             />
 
             <button
-              className="btn-primary"
+              className="btn-clay-coral"
               onClick={() => handleSendMessage()}
               disabled={loading || !inputMessage.trim()}
               style={{ padding: '0.75rem 1.25rem' }}
@@ -262,53 +270,53 @@ export const CookingAssistantPage: React.FC = () => {
         </div>
 
         {/* Right Column: Recipe Interactive Console & Timers */}
-        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '640px', overflowY: 'auto' }}>
+        <div className="card-clay" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '640px', overflowY: 'auto' }}>
           {activeRecipe ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <div>
-                  <span className="badge badge-emerald" style={{ marginBottom: '0.35rem' }}>
+                  <span className="badge badge-coral" style={{ marginBottom: '0.35rem', fontWeight: 700 }}>
                     {activeRecipe.difficulty} • {activeRecipe.servings} Servings
                   </span>
-                  <h2 style={{ fontSize: '1.45rem', color: '#fff' }}>{activeRecipe.title}</h2>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                  <h2 style={{ fontSize: '1.6rem', color: 'var(--text-primary)', margin: '0.2rem 0' }}>{activeRecipe.title}</h2>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '0.2rem' }}>
                     Prep: {activeRecipe.prep_time_min} mins | Cook: {activeRecipe.cook_time_min} mins | {activeRecipe.calories_per_serving || 450} kcal/serving
                   </div>
                 </div>
 
                 <button
                   onClick={() => speakText(`${activeRecipe.title}. Ingredients: ${activeRecipe.ingredients.map(i => i.name).join(', ')}`)}
-                  className="btn-secondary"
-                  style={{ padding: '0.4rem 0.8rem', fontSize: '0.78rem' }}
+                  className="btn-clay-secondary"
+                  style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
                   title="Read aloud via Text-to-Speech"
                 >
-                  {isSpeaking ? <VolumeX size={15} color="var(--rose-400)" /> : <Volume2 size={15} color="var(--lime-400)" />}
+                  {isSpeaking ? <VolumeX size={16} color="#E11D48" /> : <Volume2 size={16} color="#EA580C" />}
                   <span>{isSpeaking ? 'Stop Audio' : 'Audio Guide'}</span>
                 </button>
               </div>
 
               {/* Active Step Timer Widget */}
               {activeStepIndex !== null && (
-                <div className="glass-card" style={{ background: 'rgba(163, 230, 53, 0.08)', borderColor: 'var(--lime-400)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.85rem 1.25rem' }}>
+                <div style={{ background: '#FFFBEB', border: '1.5px solid #FDE68A', borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.25rem', boxShadow: 'var(--clay-shadow-card)' }}>
                   <div>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--lime-400)', fontWeight: 600 }}>ACTIVE STEP {activeStepIndex + 1} TIMER</div>
-                    <div style={{ fontSize: '1.6rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: '#fff' }}>
+                    <div style={{ fontSize: '0.75rem', color: '#92400E', fontWeight: 700, textTransform: 'uppercase' }}>ACTIVE STEP {activeStepIndex + 1} TIMER</div>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 800, fontFamily: 'var(--font-mono)', color: '#D97706', margin: '0.1rem 0' }}>
                       {Math.floor(timerSeconds / 60)}:{(timerSeconds % 60).toString().padStart(2, '0')}
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button
                       onClick={() => setTimerRunning(!timerRunning)}
-                      className="btn-primary"
-                      style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem' }}
+                      className="btn-clay-coral"
+                      style={{ padding: '0.5rem 0.95rem', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
                     >
                       {timerRunning ? <Pause size={14} /> : <Play size={14} />}
                       <span>{timerRunning ? 'Pause' : 'Resume'}</span>
                     </button>
                     <button
                       onClick={() => { setTimerRunning(false); setTimerSeconds(0); setActiveStepIndex(null); }}
-                      className="btn-secondary"
-                      style={{ padding: '0.45rem 0.85rem', fontSize: '0.8rem' }}
+                      className="btn-clay-secondary"
+                      style={{ padding: '0.5rem 0.85rem', fontSize: '0.82rem' }}
                     >
                       <RotateCcw size={14} />
                     </button>
@@ -317,24 +325,24 @@ export const CookingAssistantPage: React.FC = () => {
               )}
 
               {/* Ingredients List */}
-              <div className="glass-card" style={{ padding: '1rem' }}>
-                <div style={{ fontSize: '0.88rem', fontWeight: 600, marginBottom: '0.65rem', color: 'var(--text-secondary)' }}>
+              <div style={{ background: '#FFFFFF', padding: '1.15rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #E2E8F0', boxShadow: 'var(--clay-shadow-card)' }}>
+                <div style={{ fontSize: '0.88rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--text-primary)' }}>
                   Required Ingredients ({activeRecipe.ingredients.length})
                 </div>
-                <div className="grid-2" style={{ gap: '0.4rem', fontSize: '0.82rem' }}>
+                <div className="grid-2" style={{ gap: '0.5rem', fontSize: '0.85rem' }}>
                   {activeRecipe.ingredients.map((ing, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--text-primary)' }}>
-                      <CheckCircle2 size={14} color="var(--emerald-400)" />
-                      <strong>{ing.amount}</strong> {ing.name}
-                      {ing.notes && <span style={{ color: 'var(--text-dim)', fontSize: '0.75rem' }}>({ing.notes})</span>}
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: 'var(--text-primary)', padding: '0.35rem 0.5rem', borderRadius: 'var(--radius-sm)', background: '#F8FAFC' }}>
+                      <CheckCircle2 size={15} color="#10B981" />
+                      <strong>{ing.amount}</strong> <span>{ing.name}</span>
+                      {ing.notes && <span style={{ color: 'var(--text-muted)', fontSize: '0.78rem' }}>({ing.notes})</span>}
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Step-by-Step Cooking Guide */}
-              <div className="glass-card" style={{ padding: '1rem' }}>
-                <div style={{ fontSize: '0.88rem', fontWeight: 600, marginBottom: '0.65rem', color: 'var(--text-secondary)' }}>
+              <div style={{ background: '#FFFFFF', padding: '1.15rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #E2E8F0', boxShadow: 'var(--clay-shadow-card)' }}>
+                <div style={{ fontSize: '0.88rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--text-primary)' }}>
                   Step-by-Step Cooking Workflow
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -342,32 +350,32 @@ export const CookingAssistantPage: React.FC = () => {
                     <div
                       key={i}
                       style={{
-                        padding: '0.75rem',
-                        borderRadius: 'var(--radius-sm)',
-                        background: activeStepIndex === i ? 'rgba(163, 230, 53, 0.12)' : 'rgba(5, 19, 11, 0.75)',
-                        border: `1px solid ${activeStepIndex === i ? 'var(--lime-400)' : 'var(--border-subtle)'}`
+                        padding: '0.85rem',
+                        borderRadius: 'var(--radius-md)',
+                        background: activeStepIndex === i ? '#FFFBEB' : '#F8FAFC',
+                        border: `1.5px solid ${activeStepIndex === i ? '#FDE68A' : '#E2E8F0'}`
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-                        <span style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--lime-400)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
+                        <span style={{ fontWeight: 700, fontSize: '0.85rem', color: activeStepIndex === i ? '#D97706' : '#EA580C' }}>
                           Step {st.step_number}
                         </span>
                         {st.timer_sec > 0 && (
                           <button
                             onClick={() => startStepTimer(i, st.timer_sec)}
-                            className="btn-secondary"
-                            style={{ padding: '0.2rem 0.55rem', fontSize: '0.72rem' }}
+                            className="btn-clay-secondary"
+                            style={{ padding: '0.25rem 0.65rem', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
                           >
                             <Clock size={12} />
                             <span>Start Timer ({Math.round(st.timer_sec / 60)}m)</span>
                           </button>
                         )}
                       </div>
-                      <p style={{ fontSize: '0.82rem', color: 'var(--text-primary)', lineHeight: 1.5 }}>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-primary)', lineHeight: 1.5, margin: 0 }}>
                         {st.instruction}
                       </p>
                       {st.technique_tip && (
-                        <div style={{ fontSize: '0.75rem', color: 'var(--amber-400)', marginTop: '0.35rem' }}>
+                        <div style={{ fontSize: '0.78rem', color: '#92400E', background: '#FEFCE8', padding: '0.35rem 0.65rem', borderRadius: 'var(--radius-sm)', border: '1px solid #FEF08A', marginTop: '0.45rem' }}>
                           💡 <strong>Chef Technique:</strong> {st.technique_tip}
                         </div>
                       )}
@@ -377,23 +385,25 @@ export const CookingAssistantPage: React.FC = () => {
               </div>
 
               {/* Chef Tips */}
-              <div style={{ padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', background: 'rgba(16, 185, 129, 0.08)', border: '1px solid var(--border-subtle)', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                <strong style={{ color: 'var(--emerald-400)' }}>Executive Chef Tip:</strong> {activeRecipe.chef_tips}
+              <div style={{ padding: '0.85rem 1.15rem', borderRadius: 'var(--radius-lg)', background: '#ECFDF5', border: '1.5px solid #A7F3D0', fontSize: '0.85rem', color: '#065F46', boxShadow: 'var(--clay-shadow-card)' }}>
+                <strong style={{ color: '#047857' }}>Executive Chef Tip:</strong> {activeRecipe.chef_tips}
               </div>
             </div>
           ) : (
             /* Ingredient Substitution Finder Widget */
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <div style={{ textAlign: 'center', padding: '2rem 1rem 1rem' }}>
-                <ChefHat size={44} color="var(--border-medium)" style={{ marginBottom: '0.75rem' }} />
-                <h3 style={{ fontSize: '1.2rem', marginBottom: '0.35rem' }}>Interactive Culinary Station</h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', maxWidth: '340px', margin: '0 auto' }}>
+              <div style={{ textAlign: 'center', padding: '2.5rem 1rem 1.5rem' }}>
+                <div className="clay-icon-container" style={{ width: '64px', height: '64px', background: '#FFF2EA', color: '#EA580C', margin: '0 auto 1.25rem' }}>
+                  <ChefHat size={32} />
+                </div>
+                <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', margin: '0 0 0.5rem 0' }}>Interactive Culinary Station</h3>
+                <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', maxWidth: '340px', margin: '0 auto', lineHeight: 1.5 }}>
                   Ask any recipe question in the chat, or use the substitution calculator below to replace missing ingredients.
                 </p>
               </div>
 
-              <div className="glass-card" style={{ padding: '1.25rem' }}>
-                <h4 style={{ fontSize: '0.95rem', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
+              <div style={{ background: '#FFFFFF', padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #E2E8F0', boxShadow: 'var(--clay-shadow-card)' }}>
+                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, margin: '0 0 0.65rem 0', color: 'var(--text-primary)' }}>
                   Smart Ingredient Substitution Engine
                 </h4>
                 <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
@@ -403,27 +413,28 @@ export const CookingAssistantPage: React.FC = () => {
                     placeholder="e.g. Buttermilk, Egg, Sour cream..."
                     value={substituteQuery}
                     onChange={e => setSubstituteQuery(e.target.value)}
+                    style={{ flex: 1 }}
                   />
-                  <button className="btn-primary" onClick={handleLookupSubstitute}>
+                  <button className="btn-clay-coral" onClick={handleLookupSubstitute}>
                     Find
                   </button>
                 </div>
 
                 {substituteResult && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--emerald-400)', fontWeight: 600 }}>
+                    <div style={{ fontSize: '0.85rem', color: '#EA580C', fontWeight: 700 }}>
                       Substitutes for {substituteResult.ingredient}:
                     </div>
                     {substituteResult.substitutes.map((opt, i) => (
-                      <div key={i} style={{ padding: '0.65rem', background: 'rgba(5, 19, 11, 0.75)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-subtle)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', fontWeight: 600 }}>
+                      <div key={i} style={{ padding: '0.75rem', background: '#F8FAFC', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                           <span>{opt.name}</span>
                           <span className="badge badge-emerald">{opt.ratio}</span>
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>{opt.notes}</div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>{opt.notes}</div>
                       </div>
                     ))}
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontStyle: 'italic', marginTop: '0.35rem' }}>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontStyle: 'italic', marginTop: '0.35rem' }}>
                       {substituteResult.explanation}
                     </div>
                   </div>

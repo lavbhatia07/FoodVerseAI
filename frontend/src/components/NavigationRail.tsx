@@ -33,11 +33,11 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
   activeProfileName
 }) => {
   const primaryLinks = [
-    { id: 'food-recognition', label: 'Food Recognition', icon: Scan },
-    { id: 'freshness', label: 'Freshness Detection', icon: Sparkles },
-    { id: 'hygiene', label: 'Restaurant Hygiene', icon: ShieldAlert },
-    { id: 'cooking', label: 'Cooking Assistant', icon: ChefHat },
-    { id: 'meal-planner', label: 'Meal Planner', icon: CalendarCheck },
+    { id: 'food-recognition', label: 'Food Recognition', icon: Scan, activeBg: 'var(--color-recognition-pastel)', activeColor: '#065F46', activeBorder: 'var(--color-recognition-border)' },
+    { id: 'freshness', label: 'Freshness Detection', icon: Sparkles, activeBg: 'var(--color-freshness-pastel)', activeColor: '#3F6212', activeBorder: 'var(--color-freshness-border)' },
+    { id: 'hygiene', label: 'Restaurant Hygiene', icon: ShieldAlert, activeBg: 'var(--color-hygiene-pastel)', activeColor: '#0369A1', activeBorder: 'var(--color-hygiene-border)' },
+    { id: 'cooking', label: 'Cooking Assistant', icon: ChefHat, activeBg: 'var(--color-cooking-pastel)', activeColor: '#9A3412', activeBorder: 'var(--color-cooking-border)' },
+    { id: 'meal-planner', label: 'Meal Planner', icon: CalendarCheck, activeBg: 'var(--color-planner-pastel)', activeColor: '#5B21B6', activeBorder: 'var(--color-planner-border)' },
   ];
 
   const secondaryLinks = [
@@ -53,28 +53,33 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
       <div className="nav-header">
         <div className="brand-badge" onClick={() => onNavigate('dashboard')}>
           <div className="brand-icon-wrapper">
-            <span style={{ fontSize: '1.25rem' }}>🥑</span>
+            <span style={{ fontSize: '1.4rem' }}>🥑</span>
           </div>
           {!collapsed && (
             <div>
-              <div style={{ lineHeight: 1.1, fontSize: '1.05rem', letterSpacing: '-0.02em' }}>FoodVerse <span style={{ color: 'var(--emerald-400)' }}>AI</span></div>
-              <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontWeight: 500, letterSpacing: '0.04em' }}>SPATIAL MULTIMODAL</div>
+              <div style={{ lineHeight: 1.15, fontSize: '1.15rem', color: '#0F172A', fontWeight: 800 }}>
+                FoodVerse <span style={{ color: '#10B981' }}>AI</span>
+              </div>
+              <div style={{ fontSize: '0.68rem', color: '#64748B', fontWeight: 600, letterSpacing: '0.04em' }}>
+                FOOD INTELLIGENCE
+              </div>
             </div>
           )}
         </div>
         <button
           onClick={onToggleCollapse}
           style={{
-            background: 'transparent',
-            border: 'none',
-            color: 'var(--text-muted)',
+            background: '#F8FAFC',
+            border: '1px solid #E2E8F0',
+            color: '#64748B',
             cursor: 'pointer',
             padding: '6px',
-            borderRadius: '6px'
+            borderRadius: '10px',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.04)'
           }}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
-          {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+          {collapsed ? <ChevronRight size={17} /> : <ChevronLeft size={17} />}
         </button>
       </div>
 
@@ -86,17 +91,23 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
           return (
             <div
               key={link.id}
-              className={`nav-link-item ${isActive ? 'active' : ''}`}
+              className="nav-link-item"
               onClick={() => onNavigate(link.id)}
               title={collapsed ? link.label : undefined}
+              style={isActive ? {
+                background: link.activeBg,
+                color: link.activeColor,
+                borderColor: link.activeBorder,
+                boxShadow: '0 4px 12px rgba(100, 116, 139, 0.1), inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.9)'
+              } : undefined}
             >
-              <Icon size={20} color={isActive ? 'var(--emerald-400)' : 'currentColor'} />
+              <Icon size={20} color={isActive ? link.activeColor : '#64748B'} />
               {!collapsed && <span>{link.label}</span>}
             </div>
           );
         })}
 
-        {!collapsed && <div className="nav-section-title" style={{ marginTop: '0.5rem' }}>Workspace</div>}
+        {!collapsed && <div className="nav-section-title" style={{ marginTop: '0.75rem' }}>Workspace</div>}
         {secondaryLinks.map(link => {
           const Icon = link.icon;
           const isActive = currentPage === link.id;
@@ -107,7 +118,7 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
               onClick={() => onNavigate(link.id)}
               title={collapsed ? link.label : undefined}
             >
-              <Icon size={19} color={isActive ? 'var(--emerald-400)' : 'currentColor'} />
+              <Icon size={19} color={isActive ? '#065F46' : '#64748B'} />
               {!collapsed && <span>{link.label}</span>}
             </div>
           );
@@ -115,38 +126,41 @@ export const NavigationRail: React.FC<NavigationRailProps> = ({
       </div>
 
       {/* User Session Footer */}
-      <div style={{ padding: '0.75rem', borderTop: '1px solid var(--border-subtle)' }}>
+      <div style={{ padding: '0.85rem', borderTop: '2px solid #F8FAFC' }}>
         <div
           onClick={onOpenProfile}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.75rem',
-            padding: '0.5rem 0.65rem',
+            padding: '0.6rem 0.75rem',
             borderRadius: 'var(--radius-md)',
-            background: 'var(--surface-glass-card)',
+            background: '#FFFFFF',
             cursor: 'pointer',
-            border: '1px solid var(--border-subtle)',
+            border: '1.5px solid #E2E8F0',
+            boxShadow: 'var(--clay-shadow-sm)',
             transition: 'all 200ms ease'
           }}
           title="Switch User Profile"
         >
           <div style={{
-            width: '32px',
-            height: '32px',
+            width: '34px',
+            height: '34px',
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, var(--emerald-500) 0%, var(--lime-400) 100%)',
+            background: 'linear-gradient(135deg, #34D399 0%, #10B981 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#022013'
+            color: '#FFFFFF',
+            boxShadow: '0 3px 8px rgba(16, 185, 129, 0.35)',
+            border: '2px solid #FFFFFF'
           }}>
             <UserCheck size={16} />
           </div>
           {!collapsed && (
             <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>{activeProfileName}</div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--emerald-400)' }}>Active Session</div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0F172A' }}>{activeProfileName}</div>
+              <div style={{ fontSize: '0.7rem', color: '#059669', fontWeight: 600 }}>Active Session</div>
             </div>
           )}
         </div>

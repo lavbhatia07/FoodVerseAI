@@ -1,53 +1,123 @@
+/* ====================================================================
+   FoodVerse AI — Colorful Claymorphism Design System
+   Tactile 3D surfaces, soft puffy cards, friendly pastel food accents
+   ==================================================================== */
+
 :root {
-  --bg-void: #030a06;
-  --bg-primary: #05130b;
-  --bg-secondary: #081d11;
-  --bg-tertiary: #0d2a1b;
-  --bg-elevated: #123724;
+  /* Warm Appending Canvas & Clay Surfaces */
+  --bg-canvas: #FFF9F2;
+  --bg-canvas-alt: #FFF4E8;
+  --bg-surface: #FFFFFF;
+  --bg-surface-elevated: #FFFFFF;
+  --bg-surface-sunken: #F8FAFC;
 
-  --surface-glass: rgba(8, 29, 17, 0.75);
-  --surface-glass-card: rgba(13, 42, 27, 0.65);
-  --surface-glass-hover: rgba(19, 57, 37, 0.85);
-  --surface-glass-active: rgba(26, 75, 49, 0.95);
+  /* Clay Multi-Level Shadows */
+  --clay-shadow-sm: 
+    0 4px 10px -2px rgba(100, 116, 139, 0.08),
+    0 2px 4px -1px rgba(100, 116, 139, 0.04),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.95),
+    inset -2px -2px 4px rgba(148, 163, 184, 0.12);
 
-  --border-subtle: rgba(16, 185, 129, 0.16);
-  --border-medium: rgba(16, 185, 129, 0.30);
-  --border-glow: rgba(52, 211, 153, 0.55);
+  --clay-shadow-card: 
+    0 12px 24px -4px rgba(100, 116, 139, 0.10),
+    0 6px 12px -2px rgba(100, 116, 139, 0.06),
+    inset 2.5px 2.5px 5px rgba(255, 255, 255, 0.95),
+    inset -3px -3px 6px rgba(148, 163, 184, 0.12);
 
-  --emerald-500: #10b981;
-  --emerald-400: #34d399;
-  --emerald-300: #6ee7b7;
-  --mint-400: #2dd4bf;
-  --lime-400: #a3e635;
-  --amber-400: #fbbf24;
-  --rose-400: #fb7185;
-  --cyan-400: #22d3ee;
+  --clay-shadow-hover: 
+    0 20px 32px -4px rgba(100, 116, 139, 0.14),
+    0 10px 16px -2px rgba(100, 116, 139, 0.08),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.98),
+    inset -3px -3px 6px rgba(148, 163, 184, 0.15);
 
-  --text-primary: #f0fdf4;
-  --text-secondary: #a7f3d0;
-  --text-muted: #6ee7b7a6;
-  --text-dim: #34d39966;
+  --clay-shadow-sunken: 
+    inset 2.5px 2.5px 5px rgba(100, 116, 139, 0.12),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.95),
+    0 2px 4px rgba(100, 116, 139, 0.04);
 
-  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --clay-shadow-btn-primary: 
+    0 8px 18px -2px rgba(16, 185, 129, 0.35),
+    0 4px 8px -1px rgba(16, 185, 129, 0.2),
+    inset 2px 2px 3px rgba(255, 255, 255, 0.5),
+    inset -2px -2px 3px rgba(5, 150, 105, 0.35);
+
+  --clay-shadow-btn-pressed: 
+    0 2px 6px rgba(100, 116, 139, 0.12),
+    inset 2px 2px 5px rgba(0, 0, 0, 0.15);
+
+  /* Borders */
+  --border-clay: rgba(226, 232, 240, 0.85);
+  --border-clay-subtle: rgba(241, 245, 249, 0.9);
+  --border-highlight: rgba(255, 255, 255, 0.95);
+
+  /* Module Vibrant & Pastel Colors */
+  /* 1. Food Recognition (Mint & Emerald) */
+  --color-recognition-primary: #10B981;
+  --color-recognition-deep: #059669;
+  --color-recognition-light: #34D399;
+  --color-recognition-pastel: #D9FBE8;
+  --color-recognition-border: #A7F3D0;
+
+  /* 2. Freshness Detection (Lime & Butter Yellow) */
+  --color-freshness-primary: #84CC16;
+  --color-freshness-deep: #4D7C0F;
+  --color-freshness-light: #A3E635;
+  --color-freshness-yellow: #FFF0A8;
+  --color-freshness-pastel: #F4FDE8;
+  --color-freshness-border: #D9F99D;
+
+  /* 3. Restaurant Hygiene (Sky Blue & Teal) */
+  --color-hygiene-primary: #0EA5E9;
+  --color-hygiene-deep: #0284C7;
+  --color-hygiene-teal: #0D9488;
+  --color-hygiene-pastel: #D9EDFF;
+  --color-hygiene-border: #BAE6FD;
+
+  /* 4. Cooking Assistant (Peach & Coral) */
+  --color-cooking-primary: #FF8A80;
+  --color-cooking-deep: #F97316;
+  --color-cooking-coral: #FF6B6B;
+  --color-cooking-pastel: #FFE0CC;
+  --color-cooking-border: #FED7AA;
+
+  /* 5. Meal Planner (Lavender & Pink) */
+  --color-planner-primary: #8B5CF6;
+  --color-planner-deep: #7C3AED;
+  --color-planner-pink: #EC4899;
+  --color-planner-pastel: #E9DFFF;
+  --color-planner-border: #DDD6FE;
+
+  /* Semantic State Accents */
+  --emerald-500: #10B981;
+  --emerald-400: #059669;
+  --mint-400: #14B8A6;
+  --lime-400: #65A30D;
+  --amber-400: #D97706;
+  --rose-400: #E11D48;
+  --cyan-400: #0284C7;
+
+  /* Typography Colors — High Contrast & Readable */
+  --text-primary: #1E293B;       /* Deep slate for crystal-clear readability */
+  --text-secondary: #475569;     /* Balanced medium slate */
+  --text-muted: #64748B;         /* Soft slate */
+  --text-dim: #94A3B8;           /* Muted label slate */
+
+  /* Typography */
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  /* Rounded Clay Radii */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
   --radius-full: 9999px;
 
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
-  --shadow-spatial: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(16, 185, 129, 0.08);
-  --glow-emerald: 0 0 30px rgba(16, 185, 129, 0.25);
-  --glow-lime: 0 0 25px rgba(163, 230, 53, 0.25);
-
-  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-smooth: 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  /* Transitions */
+  --transition-fast: 160ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 260ms cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy clay curve */
+  --transition-smooth: 380ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 *, *::before, *::after {
@@ -57,11 +127,13 @@
 }
 
 body {
-  background-color: var(--bg-void);
+  background-color: var(--bg-canvas);
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.07) 0%, transparent 45%),
-    radial-gradient(circle at 85% 85%, rgba(163, 230, 53, 0.05) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(5, 19, 11, 0.9) 0%, var(--bg-void) 100%);
+    radial-gradient(circle at 10% 12%, rgba(217, 251, 232, 0.8) 0%, transparent 40%),
+    radial-gradient(circle at 90% 15%, rgba(255, 224, 204, 0.7) 0%, transparent 42%),
+    radial-gradient(circle at 50% 90%, rgba(233, 223, 255, 0.7) 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(217, 237, 255, 0.75) 0%, transparent 40%),
+    linear-gradient(180deg, #FFFDFB 0%, var(--bg-canvas) 100%);
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-body);
@@ -73,21 +145,21 @@ body {
   overflow-x: hidden;
 }
 
-/* Custom Scrollbar */
+/* Custom Clay Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--bg-void);
+  background: var(--bg-canvas);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--surface-glass-card);
-  border-radius: 4px;
-  border: 1px solid var(--border-subtle);
+  background: #CBD5E1;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--bg-canvas);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-medium);
+  background: #94A3B8;
 }
 
 /* Typography Utility */
@@ -95,7 +167,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   color: var(--text-primary);
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   line-height: 1.25;
 }
 
@@ -103,72 +175,78 @@ code, pre, .mono {
   font-family: var(--font-mono);
 }
 
-/* Glassmorphism Classes */
+/* ====================================================================
+   Claymorphic Panels & Cards
+   ==================================================================== */
+
 .glass-panel {
-  background: var(--surface-glass);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-md);
+  background: var(--bg-surface);
+  border: 2px solid var(--border-highlight);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--clay-shadow-card);
   transition: all var(--transition-normal);
+  position: relative;
 }
 
 .glass-card {
-  background: var(--surface-glass-card);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 2px solid var(--border-highlight);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
+  box-shadow: var(--clay-shadow-card);
   transition: all var(--transition-normal);
   position: relative;
-  overflow: hidden;
-}
-
-.glass-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.3), transparent);
 }
 
 .glass-card:hover {
-  border-color: var(--border-glow);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-spatial);
+  transform: translateY(-4px);
+  box-shadow: var(--clay-shadow-hover);
+  border-color: rgba(255, 255, 255, 1);
 }
 
-/* Buttons */
+.glass-card:active {
+  transform: translateY(1px) scale(0.99);
+  box-shadow: var(--clay-shadow-sm);
+}
+
+/* ====================================================================
+   Puffy 3D Clay Buttons
+   ==================================================================== */
+
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, var(--emerald-500) 0%, #059669 100%);
-  color: #022013;
-  font-weight: 600;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
+  font-weight: 700;
   font-family: var(--font-heading);
   font-size: 0.95rem;
-  padding: 0.65rem 1.4rem;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(110, 231, 183, 0.4);
+  padding: 0.75rem 1.6rem;
+  border-radius: var(--radius-full);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   cursor: pointer;
   transition: all var(--transition-normal);
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
+  box-shadow: var(--clay-shadow-btn-primary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(16, 185, 129, 0.45);
-  background: linear-gradient(135deg, var(--emerald-400) 0%, var(--emerald-500) 100%);
+  background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+  box-shadow: 
+    0 12px 24px -2px rgba(16, 185, 129, 0.45),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.btn-primary:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: var(--clay-shadow-btn-pressed);
 }
 
 .btn-primary:disabled {
-  opacity: 0.5;
+  opacity: 0.55;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -179,92 +257,129 @@ code, pre, .mono {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: var(--surface-glass);
-  backdrop-filter: blur(12px);
+  background: #FFFFFF;
   color: var(--text-primary);
-  font-weight: 500;
-  font-size: 0.95rem;
-  padding: 0.65rem 1.4rem;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-subtle);
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-clay);
   cursor: pointer;
   transition: all var(--transition-normal);
+  box-shadow: var(--clay-shadow-sm);
 }
 
 .btn-secondary:hover {
-  background: var(--surface-glass-hover);
-  border-color: var(--border-glow);
-  color: #fff;
+  background: #F8FAFC;
+  color: #0F172A;
+  border-color: #CBD5E1;
+  transform: translateY(-2px);
+  box-shadow: var(--clay-shadow-card);
 }
 
-/* Badges */
+.btn-secondary:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: var(--clay-shadow-sunken);
+}
+
+/* ====================================================================
+   Pill Badges (Soft Clay Pastels)
+   ==================================================================== */
+
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   font-size: 0.75rem;
   font-family: var(--font-heading);
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.25rem 0.65rem;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.85rem;
   border-radius: var(--radius-full);
+  box-shadow: 0 2px 6px rgba(100, 116, 139, 0.08), inset 1px 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 .badge-emerald {
-  background: rgba(16, 185, 129, 0.15);
-  color: var(--emerald-400);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: var(--color-recognition-pastel);
+  color: #065F46;
+  border: 1.5px solid var(--color-recognition-border);
 }
 
 .badge-amber {
-  background: rgba(251, 191, 36, 0.15);
-  color: var(--amber-400);
-  border: 1px solid rgba(251, 191, 36, 0.3);
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1.5px solid #FDE68A;
 }
 
 .badge-rose {
-  background: rgba(251, 113, 133, 0.15);
-  color: var(--rose-400);
-  border: 1px solid rgba(251, 113, 133, 0.3);
+  background: #FFE4E6;
+  color: #9F1239;
+  border: 1.5px solid #FECDD3;
 }
 
 .badge-cyan {
-  background: rgba(34, 211, 238, 0.15);
-  color: var(--cyan-400);
-  border: 1px solid rgba(34, 211, 238, 0.3);
+  background: var(--color-hygiene-pastel);
+  color: #0369A1;
+  border: 1.5px solid var(--color-hygiene-border);
 }
 
-/* Form Inputs */
+.badge-lime {
+  background: var(--color-freshness-pastel);
+  color: #3F6212;
+  border: 1.5px solid var(--color-freshness-border);
+}
+
+.badge-peach {
+  background: var(--color-cooking-pastel);
+  color: #9A3412;
+  border: 1.5px solid var(--color-cooking-border);
+}
+
+.badge-purple {
+  background: var(--color-planner-pastel);
+  color: #5B21B6;
+  border: 1.5px solid var(--color-planner-border);
+}
+
+/* ====================================================================
+   Soft Inset Clay Form Controls
+   ==================================================================== */
+
 .input-field {
   width: 100%;
-  background: rgba(6, 20, 12, 0.8);
-  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-sunken);
+  border: 1.5px solid #E2E8F0;
   color: var(--text-primary);
   border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1.15rem;
   font-family: var(--font-body);
   font-size: 0.95rem;
   outline: none;
+  box-shadow: var(--clay-shadow-sunken);
   transition: all var(--transition-fast);
 }
 
 .input-field:focus {
-  border-color: var(--emerald-400);
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
-  background: rgba(8, 26, 16, 0.95);
+  border-color: #10B981;
+  background: #FFFFFF;
+  box-shadow: 
+    0 0 0 3px rgba(16, 185, 129, 0.18),
+    inset 1px 1px 2px rgba(0, 0, 0, 0.04);
 }
 
 /* Macro Meter */
 .meter-bar {
-  height: 8px;
-  background: rgba(255, 255, 255, 0.08);
+  height: 10px;
+  background: #F1F5F9;
   border-radius: var(--radius-full);
   overflow: hidden;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .meter-fill {
   height: 100%;
   border-radius: var(--radius-full);
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.6);
   transition: width var(--transition-smooth);
 }

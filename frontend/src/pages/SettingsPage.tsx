@@ -68,14 +68,14 @@ export const SettingsPage: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       {/* Header */}
-      <div className="glass-panel" style={{ padding: '2rem 2.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
-          <div style={{ padding: '8px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.2)', color: 'var(--emerald-400)' }}>
-            <SettingsIcon size={22} />
+      <div className="card-clay-mint" style={{ padding: '2rem 2.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          <div className="clay-icon-container" style={{ background: 'linear-gradient(135deg, #10B981, #059669)', color: '#FFFFFF', boxShadow: '0 8px 18px rgba(16, 185, 129, 0.35)' }}>
+            <SettingsIcon size={26} />
           </div>
           <div>
-            <h1 style={{ fontSize: '1.85rem' }}>User Settings & AI System Configuration</h1>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+            <h1 style={{ fontSize: '1.9rem', color: 'var(--text-primary)', margin: '0 0 0.35rem 0' }}>User Settings & AI System Configuration</h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', margin: 0 }}>
               Configure dietary profiles, strict allergen safeguards, and review multimodal provider orchestrations.
             </p>
           </div>
@@ -84,14 +84,19 @@ export const SettingsPage: React.FC = () => {
 
       <div className="grid-2">
         {/* Left Column: User Dietary Preferences */}
-        <form onSubmit={handleSave} className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <User size={20} color="var(--emerald-400)" />
-            <h3 style={{ fontSize: '1.2rem' }}>Personal Dietary Profile</h3>
+        <form onSubmit={handleSave} className="card-clay" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <div className="clay-icon-container" style={{ width: '38px', height: '38px', background: '#ECFDF5', color: '#059669' }}>
+                <User size={18} />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', margin: 0 }}>Personal Dietary Profile</h3>
+            </div>
+            <span className="badge badge-emerald" style={{ fontSize: '0.72rem' }}>Preferences</span>
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
+            <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
               Display Name
             </label>
             <input
@@ -103,7 +108,7 @@ export const SettingsPage: React.FC = () => {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.4rem' }}>
+            <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.4rem' }}>
               Default Dietary Pattern
             </label>
             <select
@@ -121,10 +126,10 @@ export const SettingsPage: React.FC = () => {
             </select>
           </div>
 
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Daily Caloric Baseline:</span>
-              <span style={{ fontWeight: 600, color: 'var(--emerald-400)', fontFamily: 'var(--font-mono)' }}>
+          <div style={{ background: '#F8FAFC', padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #E2E8F0' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-primary)' }}>Daily Caloric Baseline:</span>
+              <span className="badge badge-emerald" style={{ fontWeight: 700, fontSize: '0.9rem', fontFamily: 'var(--font-mono)' }}>
                 {profile.daily_calorie_target} kcal
               </span>
             </div>
@@ -135,16 +140,16 @@ export const SettingsPage: React.FC = () => {
               step="50"
               value={profile.daily_calorie_target}
               onChange={e => setProfile({ ...profile, daily_calorie_target: Number(e.target.value) })}
-              style={{ width: '100%', accentColor: 'var(--emerald-400)' }}
+              style={{ width: '100%', accentColor: '#10B981', cursor: 'pointer' }}
             />
           </div>
 
           {/* Allergens Checklist */}
           <div>
-            <label style={{ display: 'block', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
+            <label style={{ display: 'block', fontSize: '0.88rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
               Permanent Allergen Exclusions:
             </label>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
               {allergenPresets.map(allergen => {
                 const isChecked = profile.allergens.includes(allergen);
                 return (
@@ -153,14 +158,16 @@ export const SettingsPage: React.FC = () => {
                     type="button"
                     onClick={() => toggleAllergen(allergen)}
                     style={{
-                      padding: '0.35rem 0.75rem',
+                      padding: '0.45rem 0.85rem',
                       borderRadius: 'var(--radius-full)',
-                      fontSize: '0.78rem',
-                      fontWeight: 600,
+                      fontSize: '0.82rem',
+                      fontWeight: 700,
                       cursor: 'pointer',
-                      border: `1px solid ${isChecked ? 'var(--rose-400)' : 'var(--border-subtle)'}`,
-                      background: isChecked ? 'rgba(251, 113, 133, 0.2)' : 'rgba(5, 19, 11, 0.75)',
-                      color: isChecked ? 'var(--rose-400)' : 'var(--text-muted)'
+                      border: `1.5px solid ${isChecked ? '#FDA4AF' : '#E2E8F0'}`,
+                      background: isChecked ? '#FFE4E6' : '#FFFFFF',
+                      color: isChecked ? '#BE123C' : '#64748B',
+                      boxShadow: 'var(--clay-shadow-card)',
+                      transition: 'all 150ms ease'
                     }}
                   >
                     {isChecked ? `✕ ${allergen}` : `+ ${allergen}`}
@@ -171,70 +178,75 @@ export const SettingsPage: React.FC = () => {
           </div>
 
           {savedSuccess && (
-            <div style={{ padding: '0.65rem 1rem', borderRadius: 'var(--radius-md)', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid var(--border-glow)', color: 'var(--emerald-400)', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <CheckCircle2 size={16} />
+            <div style={{ padding: '0.85rem 1.15rem', borderRadius: 'var(--radius-md)', background: '#ECFDF5', border: '1.5px solid #A7F3D0', color: '#047857', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <CheckCircle2 size={18} />
               <span>Preferences saved and persisted to database.</span>
             </div>
           )}
 
-          <button type="submit" className="btn-primary" disabled={saving}>
-            <Save size={16} />
+          <button type="submit" className="btn-clay-mint" disabled={saving} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', padding: '0.9rem' }}>
+            <Save size={18} />
             <span>{saving ? 'Saving...' : 'Save Preferences'}</span>
           </button>
         </form>
 
         {/* Right Column: AI Providers & System Environment */}
-        <div className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Cpu size={20} color="var(--mint-400)" />
-            <h3 style={{ fontSize: '1.2rem' }}>AI Architecture & Providers</h3>
+        <div className="card-clay" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+              <div className="clay-icon-container" style={{ width: '38px', height: '38px', background: '#F0F9FF', color: '#0284C7' }}>
+                <Cpu size={18} />
+              </div>
+              <h3 style={{ fontSize: '1.25rem', color: 'var(--text-primary)', margin: 0 }}>AI Architecture & Providers</h3>
+            </div>
+            <span className="badge badge-cyan" style={{ fontSize: '0.72rem' }}>Engine Telemetry</span>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div className="glass-card">
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+            <div style={{ background: '#ECFDF5', padding: '1.15rem 1.35rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #A7F3D0', boxShadow: 'var(--clay-shadow-card)' }}>
+              <div style={{ fontSize: '0.75rem', color: '#047857', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.04em', marginBottom: '0.25rem' }}>
                 Computer Vision Model Provider
               </div>
-              <div style={{ fontWeight: 600, fontSize: '1rem', color: '#fff' }}>
+              <div style={{ fontWeight: 800, fontSize: '1.15rem', color: '#065F46' }}>
                 {systemSettings?.providers.vision || 'local'}
               </div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.3rem' }}>
                 Pretrained Food-101 taxonomy classifier with color-space feature extraction.
               </div>
             </div>
 
-            <div className="glass-card">
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+            <div style={{ background: '#FFF2EA', padding: '1.15rem 1.35rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #FDBA74', boxShadow: 'var(--clay-shadow-card)' }}>
+              <div style={{ fontSize: '0.75rem', color: '#C2410C', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.04em', marginBottom: '0.25rem' }}>
                 Culinary LLM Provider
               </div>
-              <div style={{ fontWeight: 600, fontSize: '1rem', color: '#fff' }}>
+              <div style={{ fontWeight: 800, fontSize: '1.15rem', color: '#EA580C' }}>
                 {systemSettings?.providers.llm || 'local'}
               </div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.3rem' }}>
                 Intelligent local recipe synthesis with optional OpenAI / Gemini pluggable overrides.
               </div>
             </div>
 
-            <div className="glass-card">
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+            <div style={{ background: '#F0F9FF', padding: '1.15rem 1.35rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #BAE6FD', boxShadow: 'var(--clay-shadow-card)' }}>
+              <div style={{ fontSize: '0.75rem', color: '#0369A1', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.04em', marginBottom: '0.25rem' }}>
                 Nutrition Dataset Provider
               </div>
-              <div style={{ fontWeight: 600, fontSize: '1rem', color: '#fff' }}>
+              <div style={{ fontWeight: 800, fontSize: '1.15rem', color: '#0284C7' }}>
                 {systemSettings?.providers.nutrition || 'local'} (USDA FoodData Central)
               </div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.3rem' }}>
                 Bundled 120-item standard composition database with portion-scaling adapter.
               </div>
             </div>
 
-            <div className="glass-card">
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+            <div style={{ background: '#F5F3FF', padding: '1.15rem 1.35rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #DDD6FE', boxShadow: 'var(--clay-shadow-card)' }}>
+              <div style={{ fontSize: '0.75rem', color: '#6D28D9', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.04em', marginBottom: '0.25rem' }}>
                 Security & Media Upload Limit
               </div>
-              <div style={{ fontWeight: 600, fontSize: '1rem', color: '#fff' }}>
+              <div style={{ fontWeight: 800, fontSize: '1.15rem', color: '#7C3AED' }}>
                 {systemSettings?.max_upload_size_mb || 50} MB Max Media Payload
               </div>
-              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.3rem' }}>
                 Enforced server-side with MIME magic-byte screening and disk sanitization.
               </div>
             </div>

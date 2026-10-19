@@ -95,6 +95,7 @@ export const App: React.FC = () => {
       <div className="ambient-mesh">
         <div className="glow-orb-1" />
         <div className="glow-orb-2" />
+        <div className="glow-orb-3" />
       </div>
 
       {/* Spatial Navigation Rail */}

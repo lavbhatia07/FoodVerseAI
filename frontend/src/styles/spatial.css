@@ -1,4 +1,6 @@
-/* Spatial UI Layout & Component Styles */
+/* ====================================================================
+   FoodVerse AI — Colorful Claymorphism Layout & Components
+   ==================================================================== */
 
 .app-viewport {
   display: flex;
@@ -8,7 +10,7 @@
   position: relative;
 }
 
-/* Ambient glow spheres */
+/* Ambient Pastel Clay Spheres */
 .ambient-mesh {
   position: fixed;
   pointer-events: none;
@@ -20,39 +22,52 @@
 
 .glow-orb-1 {
   position: absolute;
-  top: -15%;
-  left: 20%;
-  width: 50vw;
-  height: 50vw;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
-  filter: blur(80px);
+  top: -10%;
+  left: 15%;
+  width: 48vw;
+  height: 48vw;
+  background: radial-gradient(circle, rgba(217, 251, 232, 0.75) 0%, transparent 65%);
+  filter: blur(70px);
   animation: floatOrb 22s ease-in-out infinite alternate;
 }
 
 .glow-orb-2 {
   position: absolute;
   bottom: -10%;
-  right: 15%;
-  width: 45vw;
-  height: 45vw;
-  background: radial-gradient(circle, rgba(163, 230, 53, 0.06) 0%, transparent 70%);
-  filter: blur(90px);
+  right: 10%;
+  width: 46vw;
+  height: 46vw;
+  background: radial-gradient(circle, rgba(255, 224, 204, 0.65) 0%, transparent 65%);
+  filter: blur(80px);
   animation: floatOrb 28s ease-in-out infinite alternate-reverse;
+}
+
+.glow-orb-3 {
+  position: absolute;
+  top: 40%;
+  right: 35%;
+  width: 38vw;
+  height: 38vw;
+  background: radial-gradient(circle, rgba(233, 223, 255, 0.55) 0%, transparent 65%);
+  filter: blur(85px);
+  animation: floatOrb 25s ease-in-out infinite alternate;
 }
 
 @keyframes floatOrb {
   0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(40px, -30px) scale(1.08); }
-  100% { transform: translate(-30px, 40px) scale(0.95); }
+  50% { transform: translate(35px, -25px) scale(1.06); }
+  100% { transform: translate(-25px, 35px) scale(0.96); }
 }
 
-/* Collapsible Spatial Nav Rail */
+/* ====================================================================
+   Clay Navigation Rail (Sidebar)
+   ==================================================================== */
+
 .spatial-nav-rail {
-  width: 260px;
-  background: rgba(5, 19, 11, 0.88);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-right: 1px solid var(--border-subtle);
+  width: 268px;
+  background: #FFFFFF;
+  border-right: 2px solid #F1F5F9;
+  box-shadow: 4px 0 24px rgba(100, 116, 139, 0.06);
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -63,7 +78,7 @@
 }
 
 .spatial-nav-rail.collapsed {
-  width: 80px;
+  width: 86px;
 }
 
 .nav-header {
@@ -71,123 +86,151 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 2px solid #F8FAFC;
 }
 
 .brand-badge {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
   text-decoration: none;
   color: var(--text-primary);
   font-family: var(--font-heading);
-  font-size: 1.15rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 800;
   cursor: pointer;
 }
 
 .brand-icon-wrapper {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--emerald-500) 0%, #064e3b 100%);
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
+  box-shadow: 
+    0 8px 16px -2px rgba(16, 185, 129, 0.35),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.5),
+    inset -2px -2px 4px rgba(4, 120, 87, 0.35);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  transition: transform var(--transition-normal);
+}
+
+.brand-badge:hover .brand-icon-wrapper {
+  transform: scale(1.06) rotate(3deg);
 }
 
 .nav-links-container {
   flex: 1;
-  padding: 1rem 0.75rem;
+  padding: 1.25rem 0.85rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.45rem;
   overflow-y: auto;
 }
 
 .nav-section-title {
-  font-size: 0.7rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-dim);
-  padding: 0.75rem 0.65rem 0.25rem;
+  color: #94A3B8;
+  padding: 0.85rem 0.75rem 0.35rem;
 }
 
 .nav-link-item {
   display: flex;
   align-items: center;
   gap: 0.85rem;
-  padding: 0.65rem 0.85rem;
-  border-radius: var(--radius-md);
-  color: var(--text-muted);
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
   text-decoration: none;
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-weight: 600;
+  font-size: 0.92rem;
   transition: all var(--transition-fast);
   cursor: pointer;
-  border: 1px solid transparent;
+  border: 1.5px solid transparent;
 }
 
 .nav-link-item:hover {
   color: var(--text-primary);
-  background: var(--surface-glass-card);
-  border-color: var(--border-subtle);
+  background: #F8FAFC;
+  transform: translateX(3px);
+  border-color: #E2E8F0;
+  box-shadow: 0 4px 10px rgba(100, 116, 139, 0.06);
 }
 
 .nav-link-item.active {
-  color: #fff;
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.22) 0%, rgba(16, 185, 129, 0.08) 100%);
-  border-color: rgba(52, 211, 153, 0.35);
-  font-weight: 600;
-  box-shadow: inset 3px 0 0 var(--emerald-400);
+  color: #065F46;
+  background: var(--color-recognition-pastel);
+  border-color: var(--color-recognition-border);
+  font-weight: 700;
+  box-shadow: 
+    0 6px 14px -2px rgba(16, 185, 129, 0.2),
+    inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.9);
 }
 
-/* Spatial Top Bar */
+/* ====================================================================
+   Clay Top Bar (Header)
+   ==================================================================== */
+
 .spatial-topbar {
-  height: 70px;
+  height: 74px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
-  border-bottom: 1px solid var(--border-subtle);
-  background: rgba(5, 19, 11, 0.65);
-  backdrop-filter: blur(20px);
+  padding: 0 2.25rem;
+  border-bottom: 2px solid #F1F5F9;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   position: sticky;
   top: 0;
   z-index: 30;
+  box-shadow: 0 4px 18px rgba(100, 116, 139, 0.04);
 }
 
 .command-search-btn {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: rgba(6, 22, 13, 0.85);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 0.5rem 1rem;
+  background: var(--bg-surface-sunken);
+  border: 1.5px solid #E2E8F0;
+  border-radius: var(--radius-full);
+  padding: 0.6rem 1.25rem;
   color: var(--text-muted);
   font-size: 0.88rem;
+  font-weight: 500;
   cursor: pointer;
+  box-shadow: var(--clay-shadow-sunken);
   transition: all var(--transition-fast);
 }
 
 .command-search-btn:hover {
-  border-color: var(--border-glow);
+  border-color: #CBD5E1;
+  background: #FFFFFF;
   color: var(--text-primary);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.08);
 }
 
 .kbd-shortcut {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
-  padding: 0.15rem 0.45rem;
+  background: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  padding: 0.15rem 0.5rem;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #475569;
+  box-shadow: 0 2px 4px rgba(100, 116, 139, 0.08);
 }
 
-/* Main Spatial Canvas */
+/* ====================================================================
+   Main Clay Canvas
+   ==================================================================== */
+
 .spatial-main-content {
   flex: 1;
   display: flex;
@@ -206,64 +249,80 @@
   width: 100%;
 }
 
-/* Command Palette Modal */
+/* ====================================================================
+   Command Palette Clay Modal
+   ==================================================================== */
+
 .command-palette-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(3, 10, 6, 0.8);
-  backdrop-filter: blur(14px);
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding-top: 15vh;
+  padding-top: 14vh;
   z-index: 100;
-  animation: fadeIn 200ms ease;
+  animation: fadeIn 180ms ease;
 }
 
 .command-palette-modal {
   width: 100%;
-  max-width: 620px;
-  background: rgba(8, 26, 16, 0.96);
-  border: 1px solid var(--border-glow);
-  border-radius: var(--radius-lg);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(16, 185, 129, 0.2);
+  max-width: 640px;
+  background: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  border-radius: var(--radius-xl);
+  box-shadow: 
+    0 24px 50px -10px rgba(15, 23, 42, 0.25),
+    0 10px 20px -5px rgba(15, 23, 42, 0.1),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.95);
   overflow: hidden;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Dropzone */
+/* ====================================================================
+   Puffy 3D Clay Dropzone
+   ==================================================================== */
+
 .spatial-dropzone {
-  border: 2px dashed var(--border-medium);
-  border-radius: var(--radius-lg);
+  border: 2.5px dashed #CBD5E1;
+  border-radius: var(--radius-xl);
   padding: 3rem 2rem;
   text-align: center;
   cursor: pointer;
-  background: rgba(8, 29, 17, 0.35);
-  backdrop-filter: blur(10px);
+  background: #FFFFFF;
+  box-shadow: var(--clay-shadow-card);
   transition: all var(--transition-normal);
 }
 
 .spatial-dropzone:hover, .spatial-dropzone.active {
-  border-color: var(--emerald-400);
-  background: rgba(16, 185, 129, 0.08);
-  box-shadow: inset 0 0 30px rgba(16, 185, 129, 0.1);
+  border-color: #10B981;
+  background: #F0FDF4;
+  transform: translateY(-3px);
+  box-shadow: 
+    0 16px 32px -4px rgba(16, 185, 129, 0.16),
+    inset 2px 2px 6px rgba(255, 255, 255, 0.9);
 }
 
-/* Grid Layouts */
+/* ====================================================================
+   Grid Layouts
+   ==================================================================== */
+
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
+  gap: 1.75rem;
 }
 
 .grid-4 {
