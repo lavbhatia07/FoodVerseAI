@@ -313,7 +313,3 @@ The implementation is tracked across six formal epic documents:
 4. **Lifestyle Guidance:** Personalized meal planning is designed for general wellness and lifestyle organization, not clinical medical nutrition therapy (MNT).
 
 ---
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
