@@ -6,7 +6,6 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-22d3ee?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vite](https://img.shields.io/badge/Vite-8.3-a3e635?logo=vite&logoColor=white)](https://vitejs.dev)
 [![Tests](https://img.shields.io/badge/Tests-15%2F15%20Passing-10b981)](#-testing--quality-assurance)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 > A production-grade, multimodal food intelligence web platform integrating computer vision, temporal video auditing, large language model culinary reasoning, and verified USDA nutritional datasets within an immersive **Spatial UI**.
 
