@@ -43,8 +43,21 @@ export interface Micronutrients {
 
 export interface FoodRecognitionResult {
   id: string;
+  is_food?: boolean;
+  dish_name?: string;
   recognized_items: RecognizedItem[];
   top_prediction: RecognizedItem;
+  food_items?: string[];
+  visible_ingredients?: string[];
+  possible_hidden_ingredients?: string[];
+  food_category?: string;
+  cuisine?: string;
+  preparation_method?: string;
+  visual_attributes?: string[];
+  confidence_description?: string;
+  uncertainties?: string[];
+  explanation?: string;
+  follow_up_questions?: string[];
   portion: PortionInfo;
   nutrition: NutritionMacros;
   micronutrients: Micronutrients;
@@ -77,6 +90,10 @@ export interface FreshnessResult {
     reference_shelf_life_days: number;
   };
   recommendations: string[];
+  possible_concerns?: string[];
+  relevant_limitations?: string[];
+  confidence_description?: string;
+  explanation?: string;
   safety_disclaimer: string;
   image_url?: string;
 }
@@ -106,6 +123,10 @@ export interface HygieneResult {
   media_type: string;
   summary: HygieneSummary;
   observations: HygieneObservation[];
+  direct_observations?: string[];
+  possible_concerns?: string[];
+  model_interpretations?: string[];
+  recommended_human_review?: string[];
   recommendations: string[];
   disclaimer: string;
   media_url?: string;
@@ -232,4 +253,6 @@ export interface SystemSettingsResponse {
   };
   version: string;
   max_upload_size_mb: number;
+  gemini_configured?: boolean;
+  gemini_model?: string;
 }

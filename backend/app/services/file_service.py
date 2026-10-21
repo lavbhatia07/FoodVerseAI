@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.models.file import UploadedFileRecord
 
-ALLOWED_IMAGE_MIMES = {"image/jpeg", "image/png", "image/webp", "image/jpg"}
+ALLOWED_IMAGE_MIMES = {"image/jpeg", "image/png", "image/webp", "image/jpg", "image/heic", "image/heif"}
 ALLOWED_VIDEO_MIMES = {"video/mp4", "video/webm", "video/quicktime"}
 ALL_ALLOWED_MIMES = ALLOWED_IMAGE_MIMES | ALLOWED_VIDEO_MIMES
 
@@ -14,7 +14,24 @@ ALL_ALLOWED_MIMES = ALLOWED_IMAGE_MIMES | ALLOWED_VIDEO_MIMES
 class FileService:
     @staticmethod
     async def save_upload_file(file: UploadFile, db: Session, allowed_types: str = "all") -> UploadedFileRecord:
-        content_type = file.content_type or ""
+        content_type = (file.content_type or "").lower()
+        filename_lower = (file.filename or "").lower()
+
+        # Fallback MIME deduction if client sends octet-stream
+        if content_type in ("application/octet-stream", ""):
+            if filename_lower.endswith((".jpg", ".jpeg")):
+                content_type = "image/jpeg"
+            elif filename_lower.endswith(".png"):
+                content_type = "image/png"
+            elif filename_lower.endswith(".webp"):
+                content_type = "image/webp"
+            elif filename_lower.endswith((".mp4", ".m4v")):
+                content_type = "video/mp4"
+            elif filename_lower.endswith(".webm"):
+                content_type = "video/webm"
+            elif filename_lower.endswith(".mov"):
+                content_type = "video/quicktime"
+
         if allowed_types == "image" and content_type not in ALLOWED_IMAGE_MIMES:
             raise HTTPException(
                 status_code=400,

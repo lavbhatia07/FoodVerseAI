@@ -35,8 +35,21 @@ class Micronutrients(BaseModel):
 
 class FoodRecognitionResponse(BaseModel):
     id: str
+    is_food: bool = True
+    dish_name: Optional[str] = None
     recognized_items: List[RecognizedItem]
     top_prediction: RecognizedItem
+    food_items: List[str] = Field(default_factory=list)
+    visible_ingredients: List[str] = Field(default_factory=list)
+    possible_hidden_ingredients: List[str] = Field(default_factory=list)
+    food_category: Optional[str] = None
+    cuisine: Optional[str] = None
+    preparation_method: Optional[str] = None
+    visual_attributes: List[str] = Field(default_factory=list)
+    confidence_description: Optional[str] = None
+    uncertainties: List[str] = Field(default_factory=list)
+    explanation: Optional[str] = None
+    follow_up_questions: List[str] = Field(default_factory=list)
     portion: PortionInfo
     nutrition: NutritionMacros
     micronutrients: Micronutrients

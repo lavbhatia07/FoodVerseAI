@@ -44,12 +44,14 @@ def get_system_settings(db: Session = Depends(get_db)):
         profile=profile,
         environment=settings.ENVIRONMENT,
         providers={
-            "llm": settings.LLM_PROVIDER,
-            "vision": settings.VISION_PROVIDER,
+            "llm": f"gemini ({settings.GEMINI_MODEL})" if settings.is_gemini_configured() else "gemini (unconfigured)",
+            "vision": f"gemini ({settings.GEMINI_MODEL})" if settings.is_gemini_configured() else "gemini (unconfigured)",
             "nutrition": settings.NUTRITION_PROVIDER
         },
         version=settings.VERSION,
-        max_upload_size_mb=settings.MAX_UPLOAD_SIZE_MB
+        max_upload_size_mb=settings.MAX_UPLOAD_SIZE_MB,
+        gemini_configured=settings.is_gemini_configured(),
+        gemini_model=settings.GEMINI_MODEL
     )
 
 

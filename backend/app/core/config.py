@@ -28,20 +28,40 @@ class Settings(BaseSettings):
     UPLOAD_DIR: str = "./data/uploads"
     MAX_UPLOAD_SIZE_MB: int = 50
 
-    # AI Providers
-    LLM_PROVIDER: str = "local"
-    LLM_MODEL: str = "gpt-4o-mini"
+    # Primary Multimodal Gemini AI
+    GEMINI_API_KEY: str = ""
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+
+    # AI Providers ('gemini' is primary multimodal provider)
+    LLM_PROVIDER: str = "gemini"
+    LLM_MODEL: str = "gemini-2.5-flash"
     LLM_API_KEY: str = ""
 
-    VISION_PROVIDER: str = "local"
-    VISION_MODEL: str = "food-vision-v1"
+    VISION_PROVIDER: str = "gemini"
+    VISION_MODEL: str = "gemini-2.5-flash"
     VISION_API_KEY: str = ""
 
     NUTRITION_PROVIDER: str = "local"
     NUTRITION_API_KEY: str = ""
 
+    def get_gemini_api_key(self) -> str:
+        """Returns configured Gemini API key from environment or config, prioritizing GEMINI_API_KEY."""
+        key = (
+            self.GEMINI_API_KEY
+            or os.environ.get("GEMINI_API_KEY", "")
+            or os.environ.get("GOOGLE_API_KEY", "")
+            or self.VISION_API_KEY
+            or self.LLM_API_KEY
+            or ""
+        )
+        return key.strip()
+
+    def is_gemini_configured(self) -> bool:
+        """Checks if a valid Gemini API key is present."""
+        return bool(self.get_gemini_api_key())
+
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=(".env", "../.env"),
         env_file_encoding="utf-8",
         extra="ignore"
     )

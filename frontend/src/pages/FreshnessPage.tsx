@@ -218,15 +218,23 @@ export const FreshnessPage: React.FC = () => {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
               {/* Score Display Card */}
-              <div className="card-clay-lime" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div className="card-clay-lime" style={{ padding: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
                 <div>
-                  <span className="badge badge-amber" style={{ marginBottom: '0.35rem', fontWeight: 700 }}>{result.category}</span>
+                  <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', marginBottom: '0.35rem' }}>
+                    <span className="badge badge-amber" style={{ fontWeight: 700 }}>{result.category}</span>
+                    {result.food_name && <span className="badge badge-emerald" style={{ fontWeight: 600 }}>{result.food_name}</span>}
+                  </div>
                   <h2 style={{ fontSize: '1.85rem', color: 'var(--text-primary)', margin: '0.2rem 0' }}>
                     {result.status}
                   </h2>
                   <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', marginTop: '0.35rem' }}>
                     Estimated safe consumption window: <strong style={{ color: '#15803D' }}>{result.shelf_life_remaining_days} days remaining</strong>
                   </div>
+                  {result.explanation && (
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', marginTop: '0.4rem', fontStyle: 'italic', maxWidth: '380px' }}>
+                      "{result.explanation}"
+                    </div>
+                  )}
                 </div>
 
                 <div style={{ textAlign: 'center' }}>

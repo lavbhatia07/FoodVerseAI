@@ -20,5 +20,9 @@ class FreshnessAnalysisResponse(BaseModel):
     observed_indicators: List[VisualIndicator]
     storage_context: dict
     recommendations: List[str]
+    possible_concerns: List[str] = Field(default_factory=list)
+    relevant_limitations: List[str] = Field(default_factory=list)
+    confidence_description: Optional[str] = None
+    explanation: Optional[str] = None
     safety_disclaimer: str
     image_url: Optional[str] = None

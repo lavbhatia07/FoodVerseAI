@@ -1,14 +1,84 @@
+"""FoodVerse AI — Gemini-Powered Restaurant Hygiene & Kitchen Safety Audit Service."""
+
 import os
 import uuid
-from typing import Optional, List, Dict, Any
+import logging
+from typing import Optional, List, Tuple, Dict, Any
+from fastapi import HTTPException
+
+from app.core.config import settings
+from app.ai.gemini_service import (
+    gemini_service,
+    GeminiHygieneAnalysis,
+    GeminiConfigurationError,
+    GeminiQuotaError,
+    GeminiTimeoutError,
+    GeminiNetworkError,
+    GeminiResponseError,
+    ImageValidationError,
+)
 from app.schemas.hygiene import (
     HygieneAnalysisResponse,
     HygieneObservation,
-    HygieneSummary
+    HygieneSummary,
 )
+
+logger = logging.getLogger("foodverse.hygiene")
 
 
 class HygieneAnalysisService:
+    """Multimodal computer vision auditing for kitchen hygiene, PPE adherence, and HACCP compliance."""
+
+    def __init__(self):
+        self.gemini = gemini_service
+
+    def _extract_video_frames(
+        self,
+        video_path: str,
+        max_frames: int = 5
+    ) -> List[Tuple[float, bytes, str]]:
+        """Extracts representative frames from video clip with accurate timestamps."""
+        try:
+            import cv2
+        except ImportError:
+            raise HTTPException(status_code=500, detail="OpenCV is required for video frame processing.")
+
+        cap = cv2.VideoCapture(video_path)
+        if not cap.isOpened():
+            raise HTTPException(status_code=400, detail="Failed to open or decode video file.")
+
+        try:
+            fps = cap.get(cv2.CAP_PROP_FPS) or 24.0
+            total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+
+            if total_frames <= 0:
+                raise HTTPException(status_code=400, detail="Video contains no readable frames.")
+
+            # Sample evenly spaced key frames
+            num_samples = min(max_frames, max(1, total_frames))
+            step = total_frames / (num_samples + 1)
+            target_indices = [int((i + 1) * step) for i in range(num_samples)]
+
+            extracted: List[Tuple[float, bytes, str]] = []
+            for frame_idx in target_indices:
+                cap.set(cv2.CAP_PROP_POS_FRAMES, frame_idx)
+                ret, frame = cap.read()
+                if not ret or frame is None:
+                    continue
+
+                timestamp_sec = round(frame_idx / fps, 1)
+                # Convert BGR to RGB JPEG
+                success, buffer = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 85])
+                if success:
+                    extracted.append((timestamp_sec, buffer.tobytes(), "image/jpeg"))
+
+            if not extracted:
+                raise HTTPException(status_code=400, detail="Could not extract usable frames from video.")
+
+            return extracted
+        finally:
+            cap.release()
+
     def analyze(
         self,
         file_path: str,
@@ -16,118 +86,82 @@ class HygieneAnalysisService:
         environment_type: str = "commercial_kitchen",
         media_url: Optional[str] = None
     ) -> HygieneAnalysisResponse:
+        """Audits restaurant kitchen hygiene from image or video frames using Gemini Vision."""
         analysis_id = f"hyg_{uuid.uuid4().hex[:8]}"
 
-        # Base findings tailored to kitchen safety compliance standards (FDA Food Code / HACCP)
+        if not self.gemini.is_configured():
+            logger.error("Attempted hygiene analysis without GEMINI_API_KEY configured.")
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "Gemini AI is not configured. Please set GEMINI_API_KEY in your backend "
+                    "environment (.env file) to enable real Gemini restaurant hygiene analysis."
+                )
+            )
+
+        if not os.path.exists(file_path):
+            raise HTTPException(status_code=404, detail="Media file not found for hygiene audit.")
+
+        try:
+            frames: List[Tuple[float, bytes, str]] = []
+            if media_type == "video":
+                frames = self._extract_video_frames(file_path, max_frames=5)
+            else:
+                with open(file_path, "rb") as f:
+                    img_bytes = f.read()
+                frames = [(0.0, img_bytes, "image/jpeg")]
+
+            gemini_res: GeminiHygieneAnalysis = self.gemini.analyze_hygiene_frames(
+                frames=frames,
+                environment_type=environment_type
+            )
+
+        except ImageValidationError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+        except GeminiQuotaError as e:
+            raise HTTPException(status_code=429, detail=str(e))
+        except GeminiTimeoutError as e:
+            raise HTTPException(status_code=504, detail=str(e))
+        except GeminiConfigurationError as e:
+            raise HTTPException(status_code=503, detail=str(e))
+        except (GeminiNetworkError, GeminiResponseError) as e:
+            raise HTTPException(status_code=502, detail=str(e))
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.exception("Unexpected error during hygiene audit: %s", str(e))
+            raise HTTPException(status_code=500, detail=f"Hygiene audit failed: {str(e)}")
+
+        # Convert findings to response schema
         observations: List[HygieneObservation] = []
+        for finding in gemini_res.findings:
+            sev = finding.severity.capitalize()
+            if sev not in ("Critical", "Major", "Minor", "Compliant"):
+                sev = "Minor"
 
-        if media_type == "video":
-            # Multi-frame timeline inspection
             observations.append(
                 HygieneObservation(
-                    timestamp_sec=2.0,
-                    category="Surface Sanitation",
-                    finding="Stainless prep workstation actively sanitized with micro-fiber cloth prior to food assembly.",
-                    severity="Compliant",
-                    confidence=0.96,
-                    remediation="Maintain scheduled surface sanitization interval every 4 hours."
+                    timestamp_sec=finding.timestamp_sec,
+                    category=finding.category,
+                    finding=finding.finding,
+                    severity=sev,
+                    confidence=round(finding.confidence, 2),
+                    remediation=finding.remediation,
+                    frame_url=None
                 )
             )
-            observations.append(
-                HygieneObservation(
-                    timestamp_sec=6.5,
-                    category="Personal Protective Equipment",
-                    finding="Operator handling ready-to-eat salad assembly with bare hands; glove dispenser adjacent but unused.",
-                    severity="Major",
-                    confidence=0.91,
-                    remediation="Immediate corrective action: operator must wash hands for 20 seconds and don certified single-use food-grade gloves."
-                )
-            )
-            observations.append(
-                HygieneObservation(
-                    timestamp_sec=11.0,
-                    category="Cross-Contamination",
-                    finding="Raw poultry cutting board maintained in separate color-coded (red) prep zone away from vegetable station.",
-                    severity="Compliant",
-                    confidence=0.94,
-                    remediation="Maintain color-coded board discipline across all kitchen shifts."
-                )
-            )
-            observations.append(
-                HygieneObservation(
-                    timestamp_sec=15.5,
-                    category="Food Storage",
-                    finding="Secondary container on prep shelf lacks dated rotation label (FIFO policy violation).",
-                    severity="Minor",
-                    confidence=0.88,
-                    remediation="Apply standardized prep date label indicating ingredient name, preparation time, and 7-day expiration threshold."
-                )
-            )
-            frames_analyzed = 16
-        else:
-            # Single image static inspection
-            observations.append(
-                HygieneObservation(
-                    timestamp_sec=0.0,
-                    category="Personal Protective Equipment",
-                    finding="Food handler wearing approved hairnet restraint and clean kitchen apron.",
-                    severity="Compliant",
-                    confidence=0.95,
-                    remediation="Continue adherence to personal grooming and restraint standards."
-                )
-            )
-            observations.append(
-                HygieneObservation(
-                    timestamp_sec=0.0,
-                    category="Surface Sanitation",
-                    finding="Work counter displays minor dry ingredient spills near spice rack; overall sanitization state intact.",
-                    severity="Minor",
-                    confidence=0.86,
-                    remediation="Wipe down intermediate work surface between distinct task steps."
-                )
-            )
-            observations.append(
-                HygieneObservation(
-                    timestamp_sec=0.0,
-                    category="Cross-Contamination",
-                    finding="Adequate physical separation observed between thermal cooking zone and cold prep tables.",
-                    severity="Compliant",
-                    confidence=0.93,
-                    remediation="Keep spatial buffer unobstructed."
-                )
-            )
-            frames_analyzed = 1
 
-        # Calculate score and summary
+        # Count severities
         critical = sum(1 for o in observations if o.severity == "Critical")
         major = sum(1 for o in observations if o.severity == "Major")
         minor = sum(1 for o in observations if o.severity == "Minor")
         compliant = sum(1 for o in observations if o.severity == "Compliant")
 
-        # Scoring deduction formula
-        score = 100 - (critical * 35) - (major * 15) - (minor * 5)
-        score = max(min(score, 100), 20)
-
-        if score >= 90:
-            tier = "Grade A — Optimal Hygiene & Sanitation"
-        elif score >= 78:
-            tier = "Grade B — Acceptable with Minor Action Items"
-        elif score >= 65:
-            tier = "Grade C — Substandard Compliance; Requires Supervisory Review"
-        else:
-            tier = "Action Required — Critical Hygiene Deficiencies Detected"
-
-        recommendations = [
-            "Enforce mandatory handwashing and glove verification before handling ready-to-eat foods.",
-            "Verify that all intermediate containers feature standardized HACCP date labeling.",
-            "Conduct shift-based inspection checklists for stainless steel sanitization contact time."
-        ]
-
         return HygieneAnalysisResponse(
             id=analysis_id,
-            overall_score=score,
-            inspection_tier=tier,
-            frames_analyzed=frames_analyzed,
+            overall_score=gemini_res.overall_score,
+            inspection_tier=gemini_res.inspection_tier,
+            frames_analyzed=len(frames),
             media_type=media_type,
             summary=HygieneSummary(
                 critical_count=critical,
@@ -136,7 +170,11 @@ class HygieneAnalysisService:
                 compliant_count=compliant
             ),
             observations=observations,
-            recommendations=recommendations,
+            direct_observations=gemini_res.direct_observations,
+            possible_concerns=gemini_res.possible_concerns,
+            model_interpretations=gemini_res.model_interpretations,
+            recommended_human_review=gemini_res.recommended_human_review,
+            recommendations=gemini_res.recommendations,
             disclaimer=(
                 "LEGAL & REGULATORY DISCLAIMER: Automated computer vision kitchen analysis serves as an internal quality benchmark "
                 "and assistive staff training tool. It does not constitute an official statutory health inspection, certified HACCP audit, "

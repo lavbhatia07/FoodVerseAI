@@ -1,62 +1,39 @@
+"""FoodVerse AI — Gemini-Powered Food Recognition and Nutrition Understanding Service."""
+
 import os
 import uuid
-import numpy as np
-from PIL import Image
+import logging
 from typing import Optional, List, Dict, Any
-from app.core.config import settings
-from app.services.nutrition_service import nutrition_service, LOCAL_USDA_DATABASE
-from app.schemas.food import FoodRecognitionResponse, RecognizedItem, PortionInfo, NutritionMacros, Micronutrients
+from fastapi import HTTPException
 
-FOOD_101_CLASSES = [
-    "apple_pie", "baby_back_ribs", "baklava", "beef_carpaccio", "beef_tartare", "beet_salad", "beignets", "bibimbap",
-    "bread_pudding", "breakfast_burrito", "bruschetta", "caesar_salad", "cannoli", "caprese_salad", "carrot_cake",
-    "ceviche", "cheesecake", "cheese_plate", "chicken_curry", "chicken_quesadilla", "chicken_wings", "chocolate_cake",
-    "chocolate_mousse", "churros", "clam_chowder", "club_sandwich", "crab_cakes", "creme_brulee", "croque_madame",
-    "cup_cakes", "deviled_eggs", "donuts", "dumplings", "edamame", "eggs_benedict", "escargots", "falafel",
-    "filet_mignon", "fish_and_chips", "foie_gras", "french_fries", "french_onion_soup", "french_toast", "fried_calamari",
-    "fried_rice", "frozen_yogurt", "garlic_bread", "gnocchi", "greek_salad", "grilled_cheese_sandwich", "grilled_salmon",
-    "guacamole", "gyoza", "hamburger", "hot_and_sour_soup", "hot_dog", "huevos_rancheros", "hummus", "ice_cream",
-    "lasagna", "lobster_bisque", "lobster_roll_sandwich", "macaroni_and_cheese", "macarons", "miso_soup", "mussels",
-    "nachos", "omelette", "onion_rings", "oysters", "pad_thai", "paella", "pancakes", "panna_cotta", "peking_duck",
-    "pho", "pizza", "pork_chop", "poutine", "prime_rib", "pulled_pork_sandwich", "ramen", "ravioli", "red_velvet_cake",
-    "risotto", "samosa", "sashimi", "scallops", "seaweed_salad", "spaghetti_bolognese", "spaghetti_carbonara",
-    "spring_rolls", "steak", "strawberry_shortcake", "sushi", "tacos", "takoyaki", "tiramisu", "tuna_tartare", "waffles"
-]
+from app.core.config import settings
+from app.ai.gemini_service import (
+    gemini_service,
+    GeminiFoodAnalysis,
+    GeminiConfigurationError,
+    GeminiQuotaError,
+    GeminiTimeoutError,
+    GeminiNetworkError,
+    GeminiResponseError,
+    ImageValidationError,
+)
+from app.services.nutrition_service import nutrition_service, LOCAL_USDA_DATABASE
+from app.schemas.food import (
+    FoodRecognitionResponse,
+    RecognizedItem,
+    PortionInfo,
+    NutritionMacros,
+    Micronutrients,
+)
+
+logger = logging.getLogger("foodverse.recognition")
 
 
 class FoodRecognitionService:
+    """Multimodal Food Recognition service backed by Google Gemini AI."""
+
     def __init__(self):
-        self.provider = settings.VISION_PROVIDER
-
-    def _analyze_image_features(self, image_path: str) -> List[tuple[str, float]]:
-        """Extracts optical color and luminance histogram features to determine food class candidates."""
-        try:
-            with Image.open(image_path) as img:
-                img_rgb = img.convert("RGB").resize((128, 128))
-                arr = np.array(img_rgb, dtype=np.float32)
-
-            r_mean = np.mean(arr[:, :, 0])
-            g_mean = np.mean(arr[:, :, 1])
-            b_mean = np.mean(arr[:, :, 2])
-
-            # Heuristic food signature based on dominant spectral channels
-            if g_mean > r_mean and g_mean > b_mean:
-                # Green dominant: Salads, avocado toast, edamame
-                return [("caesar_salad", 0.92), ("avocado_toast", 0.78), ("mixed_vegetables", 0.65)]
-            elif r_mean > 150 and g_mean < 110:
-                # Red dominant: Pizza, spaghetti bolognese, steak
-                return [("pizza", 0.94), ("spaghetti_bolognese", 0.81), ("apple", 0.69)]
-            elif r_mean > 160 and g_mean > 140 and b_mean < 100:
-                # Golden / Yellow / Brown: French fries, hamburger, grilled salmon
-                return [("hamburger", 0.91), ("grilled_salmon", 0.82), ("french_fries", 0.74)]
-            elif r_mean > 180 and g_mean > 180 and b_mean > 180:
-                # White / Light: Greek yogurt, rice, oatmeal, sushi
-                return [("greek_yogurt", 0.93), ("sushi", 0.79), ("brown_rice", 0.68)]
-            else:
-                # Balanced / Mixed
-                return [("grilled_salmon", 0.89), ("caesar_salad", 0.76), ("pizza", 0.64)]
-        except Exception:
-            return [("grilled_salmon", 0.85), ("caesar_salad", 0.72), ("brown_rice", 0.60)]
+        self.gemini = gemini_service
 
     def recognize(
         self,
@@ -65,45 +42,198 @@ class FoodRecognitionService:
         portion_grams: float = 100.0,
         image_url: Optional[str] = None
     ) -> FoodRecognitionResponse:
+        """Recognizes food from uploaded image bytes or query using Google Gemini multimodal intelligence."""
         rec_id = f"rec_{uuid.uuid4().hex[:8]}"
 
-        candidates: List[tuple[str, float]] = []
-        if query and query.strip():
-            # User provided explicit food query
-            candidates = [(query.strip().lower().replace(" ", "_"), 0.97)]
-        elif image_path and os.path.exists(image_path):
-            candidates = self._analyze_image_features(image_path)
-        else:
-            candidates = [("avocado_toast", 0.92), ("caesar_salad", 0.75)]
-
-        recognized_items: List[RecognizedItem] = []
-        for food_key, conf in candidates:
-            info = nutrition_service.find_food_data(food_key)
-            recognized_items.append(
-                RecognizedItem(
-                    name=info["name"],
-                    confidence=conf,
-                    category=info["category"],
-                    food_101_class=food_key if food_key in FOOD_101_CLASSES else None
+        # Validate that Gemini is configured; never silently fake inference
+        if not self.gemini.is_configured():
+            logger.error("Attempted food recognition without GEMINI_API_KEY configured.")
+            raise HTTPException(
+                status_code=503,
+                detail=(
+                    "Gemini AI is not configured. Please set GEMINI_API_KEY in your backend "
+                    "environment (.env file) to enable real Gemini food recognition."
                 )
             )
 
-        top = recognized_items[0]
-        nutrition_calc = nutrition_service.calculate_nutrition(top.name, portion_grams)
+        try:
+            # 1. Obtain Multimodal Visual Analysis from Gemini
+            if image_path and os.path.exists(image_path):
+                with open(image_path, "rb") as f:
+                    image_bytes = f.read()
+
+                analysis: GeminiFoodAnalysis = self.gemini.analyze_food_image(
+                    image_bytes=image_bytes,
+                    user_query=query
+                )
+            elif query and query.strip():
+                analysis = self.gemini.analyze_food_text(query=query.strip())
+            else:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Please provide an image upload or food name to recognize."
+                )
+
+        except ImageValidationError as e:
+            raise HTTPException(status_code=400, detail=str(e))
+        except GeminiQuotaError as e:
+            raise HTTPException(status_code=429, detail=str(e))
+        except GeminiTimeoutError as e:
+            raise HTTPException(status_code=504, detail=str(e))
+        except GeminiConfigurationError as e:
+            raise HTTPException(status_code=503, detail=str(e))
+        except (GeminiNetworkError, GeminiResponseError) as e:
+            raise HTTPException(status_code=502, detail=str(e))
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.exception("Unexpected error during food recognition: %s", str(e))
+            raise HTTPException(status_code=500, detail=f"Food recognition failed: {str(e)}")
+
+        # 2. Handle Non-Food Images Honestly
+        if not analysis.is_food:
+            top_item = RecognizedItem(
+                name=analysis.dish_name or "Non-Food Object",
+                confidence=round(analysis.estimated_confidence, 2),
+                category="Non-Food",
+                food_101_class=None
+            )
+            return FoodRecognitionResponse(
+                id=rec_id,
+                is_food=False,
+                dish_name=analysis.dish_name or "Non-Food Object",
+                recognized_items=[top_item],
+                top_prediction=top_item,
+                food_items=analysis.food_items,
+                visible_ingredients=analysis.visible_ingredients,
+                possible_hidden_ingredients=[],
+                food_category="Non-Food",
+                cuisine=analysis.cuisine,
+                preparation_method=analysis.preparation_method,
+                visual_attributes=analysis.visual_attributes,
+                confidence_description=analysis.confidence_description,
+                uncertainties=analysis.uncertainties,
+                explanation=analysis.explanation or "The uploaded image does not appear to contain edible food or beverages.",
+                follow_up_questions=analysis.follow_up_questions,
+                portion=PortionInfo(
+                    grams=0.0,
+                    unit="N/A",
+                    description="Not Applicable (Non-Food)"
+                ),
+                nutrition=NutritionMacros(
+                    calories=0.0,
+                    protein_g=0.0,
+                    carbs_g=0.0,
+                    fat_g=0.0,
+                    fiber_g=0.0,
+                    sugar_g=0.0,
+                    sodium_mg=0.0
+                ),
+                micronutrients=Micronutrients(),
+                data_source="Gemini Multimodal Object Analysis",
+                disclaimer=(
+                    "NON-FOOD DETECTION: Computer vision identified that this image depicts a non-edible object "
+                    f"({analysis.dish_name}) rather than food. Please upload a clear photo of an edible dish or beverage."
+                ),
+                image_url=image_url
+            )
+
+        # 3. Grounded Nutrition Computation Workflow
+        primary_name = analysis.dish_name.strip()
+        factor = portion_grams / 100.0
+
+        if nutrition_service.is_known_usda_item(primary_name):
+            # Verified USDA FoodData Central Match
+            nutrition_calc = nutrition_service.calculate_nutrition(primary_name, portion_grams)
+            macros = nutrition_calc["macros"]
+            micros = nutrition_calc["micros"]
+            portion = nutrition_calc["portion"]
+            data_source = "USDA FoodData Central Local Composition Database"
+            disclaimer = (
+                "Nutritional composition verified via USDA FoodData Central reference values. "
+                "Serving mass scaled from user-selected portion. Note that visual analysis estimates "
+                "volume only; culinary oils, butter, and seasonings can alter final calorie totals."
+            )
+        else:
+            # Item not in local USDA database -> Use Gemini's estimated composition per 100g
+            cal_100 = analysis.estimated_calories_per_100g if analysis.estimated_calories_per_100g is not None else 180.0
+            prot_100 = analysis.estimated_protein_g_per_100g if analysis.estimated_protein_g_per_100g is not None else 8.0
+            carbs_100 = analysis.estimated_carbs_g_per_100g if analysis.estimated_carbs_g_per_100g is not None else 18.0
+            fat_100 = analysis.estimated_fat_g_per_100g if analysis.estimated_fat_g_per_100g is not None else 7.0
+            fiber_100 = analysis.estimated_fiber_g_per_100g if analysis.estimated_fiber_g_per_100g is not None else 2.0
+            sugar_100 = analysis.estimated_sugar_g_per_100g if analysis.estimated_sugar_g_per_100g is not None else 2.5
+            sod_100 = analysis.estimated_sodium_mg_per_100g if analysis.estimated_sodium_mg_per_100g is not None else 250.0
+
+            macros = NutritionMacros(
+                calories=round(cal_100 * factor, 1),
+                protein_g=round(prot_100 * factor, 1),
+                carbs_g=round(carbs_100 * factor, 1),
+                fat_g=round(fat_100 * factor, 1),
+                fiber_g=round(fiber_100 * factor, 1),
+                sugar_g=round(sugar_100 * factor, 1),
+                sodium_mg=round(sod_100 * factor, 1),
+            )
+            micros = Micronutrients(
+                potassium_mg=round(200.0 * factor, 1),
+                calcium_mg=round(40.0 * factor, 1),
+                iron_mg=round(1.2 * factor, 1),
+            )
+            portion = PortionInfo(
+                grams=portion_grams,
+                unit="grams",
+                description=f"{portion_grams:.0f}g portion ({analysis.portion_description})"
+            )
+            data_source = "Gemini Multimodal AI Estimate (Unverified by Chemical Assay)"
+            disclaimer = (
+                "UNVERIFIED ESTIMATE: This dish was not found in the verified USDA composition database. "
+                "Nutritional values are AI estimates based on standard recipe heuristics and visual inspection. "
+                "They must not be treated as authoritative laboratory nutrition data."
+            )
+
+        # 4. Compile Recognized Items (Primary Dish + Components)
+        recognized_items: List[RecognizedItem] = []
+        top_item = RecognizedItem(
+            name=primary_name,
+            confidence=round(analysis.estimated_confidence, 2),
+            category=analysis.food_category or "General Food",
+            food_101_class=primary_name.lower().replace(" ", "_")
+        )
+        recognized_items.append(top_item)
+
+        # Add secondary components if identified
+        for item_name in analysis.food_items:
+            if item_name.lower() != primary_name.lower():
+                recognized_items.append(
+                    RecognizedItem(
+                        name=item_name,
+                        confidence=round(max(0.40, analysis.estimated_confidence - 0.15), 2),
+                        category="Plate Component",
+                        food_101_class=item_name.lower().replace(" ", "_")
+                    )
+                )
 
         return FoodRecognitionResponse(
             id=rec_id,
-            recognized_items=recognized_items,
-            top_prediction=top,
-            portion=nutrition_calc["portion"],
-            nutrition=nutrition_calc["macros"],
-            micronutrients=nutrition_calc["micros"],
-            data_source=nutrition_calc["data_source"],
-            disclaimer=(
-                "Computer vision estimates volume and nutritional density from visible surface characteristics. "
-                "Serving mass and nutritional values are approximations based on standard reference recipes "
-                "and do not constitute laboratory chemical assay measurements."
-            ),
+            is_food=True,
+            dish_name=primary_name,
+            recognized_items=recognized_items[:5],
+            top_prediction=top_item,
+            food_items=analysis.food_items,
+            visible_ingredients=analysis.visible_ingredients,
+            possible_hidden_ingredients=analysis.possible_hidden_ingredients,
+            food_category=analysis.food_category,
+            cuisine=analysis.cuisine,
+            preparation_method=analysis.preparation_method,
+            visual_attributes=analysis.visual_attributes,
+            confidence_description=analysis.confidence_description,
+            uncertainties=analysis.uncertainties,
+            explanation=analysis.explanation,
+            follow_up_questions=analysis.follow_up_questions,
+            portion=portion,
+            nutrition=macros,
+            micronutrients=micros,
+            data_source=data_source,
+            disclaimer=disclaimer,
             image_url=image_url
         )
 

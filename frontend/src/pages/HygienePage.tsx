@@ -264,6 +264,36 @@ export const HygienePage: React.FC = () => {
                 </div>
               </div>
 
+              {/* Direct Observations & Human Review Breakdown */}
+              {((result.direct_observations && result.direct_observations.length > 0) || (result.recommended_human_review && result.recommended_human_review.length > 0)) && (
+                <div style={{ background: '#FFFFFF', padding: '1.15rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #E2E8F0', boxShadow: 'var(--clay-shadow-card)', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {result.direct_observations && result.direct_observations.length > 0 && (
+                    <div>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.35rem' }}>
+                        Direct Visual Observations:
+                      </div>
+                      <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                        {result.direct_observations.map((item, idx) => (
+                          <li key={idx} style={{ marginBottom: '0.2rem' }}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {result.recommended_human_review && result.recommended_human_review.length > 0 && (
+                    <div style={{ background: '#FFFBEB', padding: '0.65rem 0.85rem', borderRadius: 'var(--radius-md)', border: '1px solid #FDE68A' }}>
+                      <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#92400E', marginBottom: '0.25rem' }}>
+                        Recommended Human In-Person Verification:
+                      </div>
+                      <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: '0.8rem', color: '#78350F' }}>
+                        {result.recommended_human_review.map((item, idx) => (
+                          <li key={idx} style={{ marginBottom: '0.2rem' }}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Regulatory Disclaimer */}
               <div style={{ padding: '0.85rem 1.15rem', borderRadius: 'var(--radius-lg)', background: '#FEFCE8', border: '1.5px solid #FEF08A', boxShadow: 'var(--clay-shadow-card)' }}>
                 <div style={{ fontSize: '0.82rem', color: '#854D0E', lineHeight: 1.5 }}>

@@ -81,12 +81,12 @@ export const FoodRecognitionPage: React.FC = () => {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.25rem' }}>
-              <span className="badge badge-emerald" style={{ fontWeight: 700 }}>Food-101 Deep Vision</span>
-              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>USDA FoodData Central Ingest</span>
+              <span className="badge badge-emerald" style={{ fontWeight: 700 }}>Google Gemini 2.5 Multimodal AI</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>USDA FoodData Central Grounded</span>
             </div>
             <h1 style={{ fontSize: '1.9rem', color: 'var(--text-primary)', margin: '0 0 0.35rem 0' }}>Food Recognition & Nutrition Analysis</h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', margin: 0, maxWidth: '780px' }}>
-              Multimodal optical food classifier and nutritional breakdown. Recognizes prepared dishes, calculates calibrated macros, and estimates micronutrient density.
+              Multimodal optical food understanding powered by Google Gemini AI. Identifies prepared dishes, detects plate components, calculates calibrated macros, and flags non-food uploads.
             </p>
           </div>
         </div>
@@ -221,108 +221,195 @@ export const FoodRecognitionPage: React.FC = () => {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              {/* Top Prediction Card */}
-              <div className="card-clay-mint" style={{ padding: '1.25rem 1.5rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
-                  <div>
-                    <span className="badge badge-emerald" style={{ fontSize: '0.72rem', marginBottom: '0.35rem', fontWeight: 700 }}>
-                      {result.top_prediction.category}
-                    </span>
-                    <h2 style={{ fontSize: '1.75rem', color: 'var(--text-primary)', margin: '0.2rem 0' }}>{result.top_prediction.name}</h2>
-                  </div>
-                  <div style={{ textAlign: 'right', background: 'rgba(255,255,255,0.7)', padding: '0.4rem 0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid #A7F3D0' }}>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>Confidence</div>
-                    <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#047857', fontFamily: 'var(--font-mono)' }}>
-                      {(result.top_prediction.confidence * 100).toFixed(0)}%
+              {/* Check for Non-Food Object Upload */}
+              {result.is_food === false ? (
+                <div style={{ background: '#FFF1F2', border: '2px solid #FDA4AF', borderRadius: 'var(--radius-lg)', padding: '1.5rem', boxShadow: 'var(--clay-shadow-card)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                    <AlertCircle size={26} color="#E11D48" />
+                    <div>
+                      <span className="badge badge-rose" style={{ fontWeight: 700, fontSize: '0.75rem' }}>Non-Food Object Detected</span>
+                      <h3 style={{ fontSize: '1.35rem', color: '#9F1239', margin: '0.2rem 0' }}>
+                        {result.dish_name || 'Non-Food Object'}
+                      </h3>
                     </div>
                   </div>
-                </div>
-                <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
-                  {result.portion.description}
-                </div>
-              </div>
-
-              {/* Energy & Macros Display */}
-              <div className="grid-4" style={{ gap: '0.75rem' }}>
-                <div style={{ background: '#FFFBEB', padding: '1rem 0.75rem', textAlign: 'center', borderRadius: 'var(--radius-lg)', border: '1.5px solid #FDE68A', boxShadow: 'var(--clay-shadow-card)' }}>
-                  <div style={{ fontSize: '0.72rem', color: '#92400E', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Calories</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#D97706', fontFamily: 'var(--font-mono)', margin: '0.15rem 0' }}>
-                    {result.nutrition.calories}
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: '#B45309' }}>kcal</div>
-                </div>
-
-                <div style={{ background: '#ECFDF5', padding: '1rem 0.75rem', textAlign: 'center', borderRadius: 'var(--radius-lg)', border: '1.5px solid #A7F3D0', boxShadow: 'var(--clay-shadow-card)' }}>
-                  <div style={{ fontSize: '0.72rem', color: '#065F46', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Protein</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#059669', fontFamily: 'var(--font-mono)', margin: '0.15rem 0' }}>
-                    {result.nutrition.protein_g}g
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: '#047857' }}>4 kcal/g</div>
-                </div>
-
-                <div style={{ background: '#F0F9FF', padding: '1rem 0.75rem', textAlign: 'center', borderRadius: 'var(--radius-lg)', border: '1.5px solid #BAE6FD', boxShadow: 'var(--clay-shadow-card)' }}>
-                  <div style={{ fontSize: '0.72rem', color: '#075985', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Carbs</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0284C7', fontFamily: 'var(--font-mono)', margin: '0.15rem 0' }}>
-                    {result.nutrition.carbs_g}g
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: '#0369A1' }}>Fiber: {result.nutrition.fiber_g}g</div>
-                </div>
-
-                <div style={{ background: '#FFF1F2', padding: '1rem 0.75rem', textAlign: 'center', borderRadius: 'var(--radius-lg)', border: '1.5px solid #FECDD3', boxShadow: 'var(--clay-shadow-card)' }}>
-                  <div style={{ fontSize: '0.72rem', color: '#9F1239', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Total Fat</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#E11D48', fontFamily: 'var(--font-mono)', margin: '0.15rem 0' }}>
-                    {result.nutrition.fat_g}g
-                  </div>
-                  <div style={{ fontSize: '0.72rem', color: '#BE123C' }}>9 kcal/g</div>
-                </div>
-              </div>
-
-              {/* Top-K Candidate Predictions */}
-              <div style={{ background: '#FFFFFF', padding: '1.15rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #E2E8F0', boxShadow: 'var(--clay-shadow-card)' }}>
-                <div style={{ fontSize: '0.88rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--text-primary)' }}>
-                  Top-K Vision Classification Candidates
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {result.recognized_items.map((item, idx) => (
-                    <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.85rem', padding: '0.45rem 0.75rem', borderRadius: 'var(--radius-sm)', background: idx === 0 ? '#ECFDF5' : '#F8FAFC', border: idx === 0 ? '1px solid #A7F3D0' : '1px solid #F1F5F9' }}>
-                      <span style={{ fontWeight: idx === 0 ? 700 : 500, color: idx === 0 ? '#047857' : 'var(--text-secondary)' }}>
-                        {idx + 1}. {item.name}
-                      </span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600, color: idx === 0 ? '#047857' : 'var(--text-muted)' }}>
-                        {(item.confidence * 100).toFixed(1)}%
-                      </span>
+                  <p style={{ color: '#BE123C', fontSize: '0.92rem', lineHeight: 1.5, margin: '0 0 1rem 0' }}>
+                    {result.explanation || 'Visual analysis indicates this image depicts a non-edible object rather than a food dish or beverage.'}
+                  </p>
+                  {result.visual_attributes && result.visual_attributes.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1rem' }}>
+                      {result.visual_attributes.map((attr, i) => (
+                        <span key={i} style={{ background: 'rgba(255,255,255,0.8)', border: '1px solid #FECDD3', borderRadius: 'var(--radius-sm)', padding: '0.2rem 0.5rem', fontSize: '0.78rem', color: '#9F1239' }}>
+                          {attr}
+                        </span>
+                      ))}
                     </div>
-                  ))}
+                  )}
+                  <div style={{ fontSize: '0.85rem', color: '#881337', background: 'rgba(255,255,255,0.6)', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)', border: '1px dashed #FDA4AF' }}>
+                    💡 <strong>Tip:</strong> FoodVerse AI requires an edible food dish, meal plate, or beverage. Please upload a clear photo of food.
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <>
+                  {/* Top Prediction Card */}
+                  <div className="card-clay-mint" style={{ padding: '1.25rem 1.5rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                      <div>
+                        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.35rem' }}>
+                          <span className="badge badge-emerald" style={{ fontSize: '0.72rem', fontWeight: 700 }}>
+                            {result.food_category || result.top_prediction.category}
+                          </span>
+                          {result.cuisine && (
+                            <span className="badge badge-blue" style={{ fontSize: '0.72rem', fontWeight: 600 }}>
+                              {result.cuisine} Cuisine
+                            </span>
+                          )}
+                          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                            {result.data_source}
+                          </span>
+                        </div>
+                        <h2 style={{ fontSize: '1.75rem', color: 'var(--text-primary)', margin: '0.2rem 0' }}>
+                          {result.dish_name || result.top_prediction.name}
+                        </h2>
+                      </div>
+                      <div style={{ textAlign: 'right', background: 'rgba(255,255,255,0.85)', padding: '0.4rem 0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid #A7F3D0' }}>
+                        <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: 600 }}>Confidence</div>
+                        <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#047857', fontFamily: 'var(--font-mono)' }}>
+                          {(result.top_prediction.confidence * 100).toFixed(0)}%
+                        </div>
+                        {result.confidence_description && (
+                          <div style={{ fontSize: '0.68rem', color: '#047857', fontWeight: 500 }}>
+                            {result.confidence_description}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
+                      {result.portion.description}
+                    </div>
+                    {result.explanation && (
+                      <div style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', marginTop: '0.5rem', lineHeight: 1.45, fontStyle: 'italic' }}>
+                        "{result.explanation}"
+                      </div>
+                    )}
+                  </div>
 
-              {/* Micronutrients breakdown */}
-              {result.micronutrients && (
-                <div style={{ background: '#FFFFFF', padding: '1.15rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #E2E8F0', boxShadow: 'var(--clay-shadow-card)' }}>
-                  <div style={{ fontSize: '0.88rem', fontWeight: 700, marginBottom: '0.65rem', color: 'var(--text-primary)' }}>
-                    Key Micronutrients (per {portionGrams}g)
+                  {/* Components and Ingredients Breakdown */}
+                  {((result.visible_ingredients && result.visible_ingredients.length > 0) || (result.possible_hidden_ingredients && result.possible_hidden_ingredients.length > 0)) && (
+                    <div style={{ background: '#FFFFFF', padding: '1.15rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #E2E8F0', boxShadow: 'var(--clay-shadow-card)' }}>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, marginBottom: '0.65rem', color: 'var(--text-primary)' }}>
+                        Dish Components & Ingredients Breakdown
+                      </div>
+                      {result.visible_ingredients && result.visible_ingredients.length > 0 && (
+                        <div style={{ marginBottom: '0.5rem' }}>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, display: 'block', marginBottom: '0.25rem' }}>Visible Components:</span>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                            {result.visible_ingredients.map((ing, i) => (
+                              <span key={i} className="badge badge-emerald" style={{ fontSize: '0.75rem' }}>
+                                {ing}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {result.possible_hidden_ingredients && result.possible_hidden_ingredients.length > 0 && (
+                        <div>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 600, display: 'block', marginBottom: '0.25rem' }}>Possible Hidden / Preparation Elements:</span>
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                            {result.possible_hidden_ingredients.map((ing, i) => (
+                              <span key={i} style={{ background: '#FEF3C7', color: '#92400E', padding: '0.2rem 0.5rem', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', border: '1px solid #FDE68A' }}>
+                                {ing}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Energy & Macros Display */}
+                  <div className="grid-4" style={{ gap: '0.75rem' }}>
+                    <div style={{ background: '#FFFBEB', padding: '1rem 0.75rem', textAlign: 'center', borderRadius: 'var(--radius-lg)', border: '1.5px solid #FDE68A', boxShadow: 'var(--clay-shadow-card)' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#92400E', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Calories</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#D97706', fontFamily: 'var(--font-mono)', margin: '0.15rem 0' }}>
+                        {result.nutrition.calories}
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: '#B45309' }}>kcal</div>
+                    </div>
+
+                    <div style={{ background: '#ECFDF5', padding: '1rem 0.75rem', textAlign: 'center', borderRadius: 'var(--radius-lg)', border: '1.5px solid #A7F3D0', boxShadow: 'var(--clay-shadow-card)' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#065F46', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Protein</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#059669', fontFamily: 'var(--font-mono)', margin: '0.15rem 0' }}>
+                        {result.nutrition.protein_g}g
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: '#047857' }}>4 kcal/g</div>
+                    </div>
+
+                    <div style={{ background: '#F0F9FF', padding: '1rem 0.75rem', textAlign: 'center', borderRadius: 'var(--radius-lg)', border: '1.5px solid #BAE6FD', boxShadow: 'var(--clay-shadow-card)' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#075985', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Carbs</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#0284C7', fontFamily: 'var(--font-mono)', margin: '0.15rem 0' }}>
+                        {result.nutrition.carbs_g}g
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: '#0369A1' }}>Fiber: {result.nutrition.fiber_g}g</div>
+                    </div>
+
+                    <div style={{ background: '#FFF1F2', padding: '1rem 0.75rem', textAlign: 'center', borderRadius: 'var(--radius-lg)', border: '1.5px solid #FECDD3', boxShadow: 'var(--clay-shadow-card)' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#9F1239', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Total Fat</div>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#E11D48', fontFamily: 'var(--font-mono)', margin: '0.15rem 0' }}>
+                        {result.nutrition.fat_g}g
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: '#BE123C' }}>9 kcal/g</div>
+                    </div>
                   </div>
-                  <div className="grid-3" style={{ gap: '0.65rem', fontSize: '0.82rem' }}>
-                    <div style={{ background: '#F8FAFC', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Potassium:</span> <strong style={{ color: 'var(--text-primary)' }}>{result.micronutrients.potassium_mg || 0} mg</strong>
+
+                  {/* Top Candidate Predictions */}
+                  <div style={{ background: '#FFFFFF', padding: '1.15rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #E2E8F0', boxShadow: 'var(--clay-shadow-card)' }}>
+                    <div style={{ fontSize: '0.88rem', fontWeight: 700, marginBottom: '0.75rem', color: 'var(--text-primary)' }}>
+                      Identified Plate Components & Candidates
                     </div>
-                    <div style={{ background: '#F8FAFC', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Calcium:</span> <strong style={{ color: 'var(--text-primary)' }}>{result.micronutrients.calcium_mg || 0} mg</strong>
-                    </div>
-                    <div style={{ background: '#F8FAFC', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
-                      <span style={{ color: 'var(--text-muted)' }}>Iron:</span> <strong style={{ color: 'var(--text-primary)' }}>{result.micronutrients.iron_mg || 0} mg</strong>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      {result.recognized_items.map((item, idx) => (
+                        <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.85rem', padding: '0.45rem 0.75rem', borderRadius: 'var(--radius-sm)', background: idx === 0 ? '#ECFDF5' : '#F8FAFC', border: idx === 0 ? '1px solid #A7F3D0' : '1px solid #F1F5F9' }}>
+                          <span style={{ fontWeight: idx === 0 ? 700 : 500, color: idx === 0 ? '#047857' : 'var(--text-secondary)' }}>
+                            {idx + 1}. {item.name} ({item.category})
+                          </span>
+                          <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 600, color: idx === 0 ? '#047857' : 'var(--text-muted)' }}>
+                            {(item.confidence * 100).toFixed(1)}%
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </div>
+
+                  {/* Micronutrients breakdown */}
+                  {result.micronutrients && (
+                    <div style={{ background: '#FFFFFF', padding: '1.15rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid #E2E8F0', boxShadow: 'var(--clay-shadow-card)' }}>
+                      <div style={{ fontSize: '0.88rem', fontWeight: 700, marginBottom: '0.65rem', color: 'var(--text-primary)' }}>
+                        Key Micronutrients (per {portionGrams}g)
+                      </div>
+                      <div className="grid-3" style={{ gap: '0.65rem', fontSize: '0.82rem' }}>
+                        <div style={{ background: '#F8FAFC', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
+                          <span style={{ color: 'var(--text-muted)' }}>Potassium:</span> <strong style={{ color: 'var(--text-primary)' }}>{result.micronutrients.potassium_mg || 0} mg</strong>
+                        </div>
+                        <div style={{ background: '#F8FAFC', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
+                          <span style={{ color: 'var(--text-muted)' }}>Calcium:</span> <strong style={{ color: 'var(--text-primary)' }}>{result.micronutrients.calcium_mg || 0} mg</strong>
+                        </div>
+                        <div style={{ background: '#F8FAFC', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-md)', border: '1px solid #E2E8F0' }}>
+                          <span style={{ color: 'var(--text-muted)' }}>Iron:</span> <strong style={{ color: 'var(--text-primary)' }}>{result.micronutrients.iron_mg || 0} mg</strong>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Uncertainty & Nutrition Source Disclosure */}
+                  <div style={{ padding: '0.85rem 1.15rem', borderRadius: 'var(--radius-lg)', background: '#FEFCE8', border: '1.5px solid #FEF08A', display: 'flex', gap: '0.75rem', boxShadow: 'var(--clay-shadow-card)' }}>
+                    <HelpCircle size={20} color="#CA8A04" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div style={{ fontSize: '0.82rem', color: '#854D0E', lineHeight: 1.5 }}>
+                      <strong style={{ color: '#A16207' }}>Source ({result.data_source}):</strong> {result.disclaimer}
+                    </div>
+                  </div>
+                </>
               )}
-
-              {/* Uncertainty Disclosure */}
-              <div style={{ padding: '0.85rem 1.15rem', borderRadius: 'var(--radius-lg)', background: '#FEFCE8', border: '1.5px solid #FEF08A', display: 'flex', gap: '0.75rem', boxShadow: 'var(--clay-shadow-card)' }}>
-                <HelpCircle size={20} color="#CA8A04" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <div style={{ fontSize: '0.82rem', color: '#854D0E', lineHeight: 1.5 }}>
-                  <strong style={{ color: '#A16207' }}>Uncertainty & Portion Disclosure:</strong> {result.disclaimer}
-                </div>
-              </div>
             </div>
           )}
         </div>

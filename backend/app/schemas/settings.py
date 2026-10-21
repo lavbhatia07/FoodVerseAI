@@ -17,3 +17,5 @@ class SystemSettingsResponse(BaseModel):
     providers: Dict[str, str]
     version: str
     max_upload_size_mb: int
+    gemini_configured: bool = False
+    gemini_model: str = "gemini-2.5-flash"

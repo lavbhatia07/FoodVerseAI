@@ -125,6 +125,16 @@ class NutritionService:
         self.api_key = settings.NUTRITION_API_KEY
         self.provider = settings.NUTRITION_PROVIDER
 
+    def is_known_usda_item(self, query: str) -> bool:
+        """Checks if a food query corresponds to a verified item in the USDA database."""
+        normalized = query.lower().replace(" ", "_").replace("-", "_")
+        if normalized in LOCAL_USDA_DATABASE:
+            return True
+        for key in LOCAL_USDA_DATABASE:
+            if key in normalized or normalized in key:
+                return True
+        return False
+
     def find_food_data(self, query: str) -> Dict[str, Any]:
         """Finds closest matching food data in local verified USDA database or fallback."""
         normalized = query.lower().replace(" ", "_").replace("-", "_")

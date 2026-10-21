@@ -6,6 +6,7 @@ from sqlalchemy import text
 from app.core.config import settings
 from app.database.session import get_db
 from app.schemas.health import HealthResponse, ReadinessResponse
+from app.ai.gemini_service import gemini_service
 
 router = APIRouter(prefix="/health", tags=["Health"])
 
@@ -18,13 +19,17 @@ def get_health(db: Session = Depends(get_db)):
     except Exception as e:
         db_status = f"unhealthy: {str(e)}"
 
+    gemini_ready = gemini_service.is_configured()
+
     return HealthResponse(
         status="healthy" if db_status == "connected" else "degraded",
         version=settings.VERSION,
-        timestamp=datetime.datetime.utcnow().isoformat() + "Z",
+        timestamp=datetime.datetime.now(datetime.timezone.utc).isoformat(),
         providers={
-            "llm": settings.LLM_PROVIDER,
-            "vision": settings.VISION_PROVIDER,
+            "gemini": "configured" if gemini_ready else "missing_api_key",
+            "gemini_model": settings.GEMINI_MODEL,
+            "llm": f"gemini ({settings.GEMINI_MODEL})" if gemini_ready else "gemini (missing_api_key)",
+            "vision": f"gemini ({settings.GEMINI_MODEL})" if gemini_ready else "gemini (missing_api_key)",
             "nutrition": settings.NUTRITION_PROVIDER
         },
         database=db_status
@@ -41,16 +46,18 @@ def get_readiness(db: Session = Depends(get_db)):
     except Exception:
         db_ok = False
 
-    models_ready = True  # Local heuristic models are bundled and active
+    gemini_ready = gemini_service.is_configured()
 
     return ReadinessResponse(
-        ready=storage_ok and db_ok and models_ready,
+        ready=storage_ok and db_ok and gemini_ready,
         storage_writable=storage_ok,
         database_ready=db_ok,
-        models_ready=models_ready,
+        models_ready=gemini_ready,
         details={
             "storage_path": settings.UPLOAD_DIR,
             "database_url": settings.DATABASE_URL.split("@")[-1],  # Sanitized
-            "environment": settings.ENVIRONMENT
+            "environment": settings.ENVIRONMENT,
+            "gemini_configured": str(gemini_ready),
+            "gemini_model": settings.GEMINI_MODEL
         }
     )

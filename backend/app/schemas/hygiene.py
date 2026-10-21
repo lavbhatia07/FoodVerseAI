@@ -27,6 +27,10 @@ class HygieneAnalysisResponse(BaseModel):
     media_type: str  # image, video
     summary: HygieneSummary
     observations: List[HygieneObservation]
+    direct_observations: List[str] = Field(default_factory=list)
+    possible_concerns: List[str] = Field(default_factory=list)
+    model_interpretations: List[str] = Field(default_factory=list)
+    recommended_human_review: List[str] = Field(default_factory=list)
     recommendations: List[str]
     disclaimer: str
     media_url: Optional[str] = None
