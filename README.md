@@ -156,11 +156,17 @@ FoodVerse-AI/
 │   ├── testing.md           # Quality assurance methodology
 │   ├── deployment.md        # Single-host & container deployment guide
 │   ├── limitations.md       # Scientific boundaries & ethical guardrails
-│   ├── conclusion.md        # Capstone conclusion & future research roadmap
-│   └── epics/               # All 6 complete GitHub Epic documents
+│   └── conclusion.md        # Capstone conclusion & future research roadmap
+├── epics/                   # All 6 complete GitHub Epic documents (standalone root directory)
+│   ├── README.md            # Master index & epics overview
+│   ├── EPIC-1-requirements-environment.md
+│   ├── EPIC-2-food-recognition-nutrition.md
+│   ├── EPIC-3-freshness-spoilage.md
+│   ├── EPIC-4-hygiene-smart-kitchen.md
+│   ├── EPIC-5-personalized-meal-planner.md
+│   └── EPIC-6-interface-testing-deployment.md
 ├── .env.example             # Documented environment variable template
 ├── .gitignore               # Strict source control exclusion rules
-├── LICENSE                  # MIT License
 └── README.md                # Master project documentation
 ```
 
@@ -295,13 +301,13 @@ Access the complete application under a single unified URL at `http://localhost:
 
 ## 📚 GitHub Epics Documentation
 
-The implementation is tracked across six formal epic documents:
-- [EPIC 1: Requirements Specification and Environment Setup](docs/epics/EPIC-1-requirements-environment.md)
-- [EPIC 2: Food Recognition & Nutrition Module Development](docs/epics/EPIC-2-food-recognition-nutrition.md)
-- [EPIC 3: Food Freshness & Spoilage Detection Module](docs/epics/EPIC-3-freshness-spoilage.md)
-- [EPIC 4: Restaurant Hygiene & Smart Kitchen Modules](docs/epics/EPIC-4-hygiene-smart-kitchen.md)
-- [EPIC 5: Personalized Meal Planner Development](docs/epics/EPIC-5-personalized-meal-planner.md)
-- [EPIC 6: Interface, Testing, and Deployment](docs/epics/EPIC-6-interface-testing-deployment.md)
+The implementation is tracked across six formal epic documents in the dedicated [`epics/`](epics/) directory:
+- [EPIC 1: Requirements Specification and Environment Setup](epics/EPIC-1-requirements-environment.md)
+- [EPIC 2: Food Recognition & Nutrition Module Development](epics/EPIC-2-food-recognition-nutrition.md)
+- [EPIC 3: Food Freshness & Spoilage Detection Module](epics/EPIC-3-freshness-spoilage.md)
+- [EPIC 4: Restaurant Hygiene & Smart Kitchen Modules](epics/EPIC-4-hygiene-smart-kitchen.md)
+- [EPIC 5: Personalized Meal Planner Development](epics/EPIC-5-personalized-meal-planner.md)
+- [EPIC 6: Interface, Testing, and Deployment](epics/EPIC-6-interface-testing-deployment.md)
 
 ---
 

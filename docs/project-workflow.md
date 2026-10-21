@@ -40,12 +40,12 @@ The implementation follows six strictly ordered GitHub epics:
 
 | Epic ID | Title | Documentation Link | Status |
 |:---|:---|:---|:---|
-| **EPIC 1** | Requirements Specification and Environment Setup | [EPIC-1](file:///c:/Users/Lenovo/Food_VerseAI/docs/epics/EPIC-1-requirements-environment.md) | ✅ Completed |
-| **EPIC 2** | Food Recognition & Nutrition Module Development | [EPIC-2](file:///c:/Users/Lenovo/Food_VerseAI/docs/epics/EPIC-2-food-recognition-nutrition.md) | ✅ Completed |
-| **EPIC 3** | Food Freshness & Spoilage Detection Module | [EPIC-3](file:///c:/Users/Lenovo/Food_VerseAI/docs/epics/EPIC-3-freshness-spoilage.md) | ✅ Completed |
-| **EPIC 4** | Restaurant Hygiene & Smart Kitchen Modules | [EPIC-4](file:///c:/Users/Lenovo/Food_VerseAI/docs/epics/EPIC-4-hygiene-smart-kitchen.md) | ✅ Completed |
-| **EPIC 5** | Personalized Meal Planner Development | [EPIC-5](file:///c:/Users/Lenovo/Food_VerseAI/docs/epics/EPIC-5-personalized-meal-planner.md) | ✅ Completed |
-| **EPIC 6** | Interface, Testing, and Deployment | [EPIC-6](file:///c:/Users/Lenovo/Food_VerseAI/docs/epics/EPIC-6-interface-testing-deployment.md) | ✅ Completed |
+| **EPIC 1** | Requirements Specification and Environment Setup | [EPIC-1](../epics/EPIC-1-requirements-environment.md) | ✅ Completed |
+| **EPIC 2** | Food Recognition & Nutrition Module Development | [EPIC-2](../epics/EPIC-2-food-recognition-nutrition.md) | ✅ Completed |
+| **EPIC 3** | Food Freshness & Spoilage Detection Module | [EPIC-3](../epics/EPIC-3-freshness-spoilage.md) | ✅ Completed |
+| **EPIC 4** | Restaurant Hygiene & Smart Kitchen Modules | [EPIC-4](../epics/EPIC-4-hygiene-smart-kitchen.md) | ✅ Completed |
+| **EPIC 5** | Personalized Meal Planner Development | [EPIC-5](../epics/EPIC-5-personalized-meal-planner.md) | ✅ Completed |
+| **EPIC 6** | Interface, Testing, and Deployment | [EPIC-6](../epics/EPIC-6-interface-testing-deployment.md) | ✅ Completed |
 
 ---
 
