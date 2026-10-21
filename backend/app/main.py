@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi.responses import FileResponse
 from app.core.config import settings
 from app.database.session import Base, engine
 from app.api.v1 import api_router
@@ -19,19 +19,34 @@ app = FastAPI(
 )
 
 # CORS Middleware
-origins = settings.ALLOWED_ORIGINS
-if isinstance(origins, str):
-    origins = [o.strip() for o in origins.split(",") if o.strip()]
+allowed_origins = settings.ALLOWED_ORIGINS
+if isinstance(allowed_origins, str):
+    allowed_origins = [origin.strip() for origin in allowed_origins.split(",") if origin.strip()]
+else:
+    allowed_origins = [origin.strip() for origin in allowed_origins if origin.strip()]
 
-# In development, also ensure localhost variations are allowed
-dev_origins = ["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000", "http://127.0.0.1:3000"]
-for orig in dev_origins:
-    if orig not in origins:
-        origins.append(orig)
+# Normalize origins and keep localhost working for local development.
+allowed_origins = [origin.rstrip("/") for origin in allowed_origins]
+
+dev_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+for origin in dev_origins:
+    if origin not in allowed_origins:
+        allowed_origins.append(origin)
+
+# Avoid wildcard origins when credentials are enabled; Render production must use explicit origins.
+if settings.ENVIRONMENT == "development":
+    cors_origins = [origin for origin in dev_origins if origin]
+else:
+    cors_origins = allowed_origins
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if settings.ENVIRONMENT == "development" else origins,
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
