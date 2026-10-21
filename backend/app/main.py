@@ -25,9 +25,13 @@ if isinstance(allowed_origins, str):
 else:
     allowed_origins = [origin.strip() for origin in allowed_origins if origin.strip()]
 
-# Normalize origins and keep localhost working for local development.
-allowed_origins = [origin.rstrip("/") for origin in allowed_origins]
+allowed_origins = [origin.rstrip("/") for origin in allowed_origins if origin]
 
+render_frontend_origin = "https://foodverseai-1.onrender.com"
+if render_frontend_origin not in allowed_origins:
+    allowed_origins.append(render_frontend_origin)
+
+# Keep localhost development origins usable while allowing the deployed frontend origin in production.
 dev_origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
@@ -38,11 +42,7 @@ for origin in dev_origins:
     if origin not in allowed_origins:
         allowed_origins.append(origin)
 
-# Avoid wildcard origins when credentials are enabled; Render production must use explicit origins.
-if settings.ENVIRONMENT == "development":
-    cors_origins = [origin for origin in dev_origins if origin]
-else:
-    cors_origins = allowed_origins
+cors_origins = list(dict.fromkeys(allowed_origins))
 
 app.add_middleware(
     CORSMiddleware,

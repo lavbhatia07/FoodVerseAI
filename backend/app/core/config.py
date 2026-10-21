@@ -15,7 +15,10 @@ class Settings(BaseSettings):
     PORT: int = 8000
 
     # CORS
-    ALLOWED_ORIGINS: Union[str, List[str]] = "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173"
+    ALLOWED_ORIGINS: Union[str, List[str]] = (
+        "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,"
+        "https://foodverseai-1.onrender.com"
+    )
 
     @field_validator("ALLOWED_ORIGINS", mode="before")
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> List[str]:

@@ -15,7 +15,7 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: ALLOWED_ORIGINS
-        value: https://foodverse-frontend.onrender.com
+        value: http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,https://foodverseai-1.onrender.com
       - key: LOG_LEVEL
         value: info
 
@@ -26,7 +26,4 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_BASE_URL
-        fromService:
-          type: web
-          name: foodverse-backend
-          property: host
+        value: https://foodverseai-1.onrender.com/api/v1
