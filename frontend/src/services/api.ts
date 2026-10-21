@@ -11,7 +11,26 @@ import {
   UserProfileSettings
 } from '../types';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
+const DEFAULT_API_BASE = 'http://localhost:8000/api/v1';
+
+const API_BASE = (() => {
+  const rawValue = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE;
+  const normalized = String(rawValue).trim().replace(/\/+$/, '');
+
+  if (!normalized) {
+    return DEFAULT_API_BASE;
+  }
+
+  if (normalized.endsWith('/api/v1')) {
+    return normalized;
+  }
+
+  if (normalized.includes('/api/v1')) {
+    return normalized.replace(/\/+$/, '');
+  }
+
+  return `${normalized}/api/v1`;
+})();
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
